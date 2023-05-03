@@ -40,3 +40,35 @@ const testObj = FlagByEnv.obj.overrideOnDeclaration({
     prop1: 'overrided',
   }
 })
+
+interface IProps {
+  prop1: "1",
+  prop2: 1,
+  prop3: null,
+}
+
+interface IState {
+  state1: "1",
+}
+
+class TestClassComponent extends FlagByEnv.jsx.Component<IProps, {
+  [Features.feature1]: {
+    prop1: "overrided",
+    prop2: "overrided",
+    prop3: "overrided",
+    prop_for_1: "newProp",
+  },
+  [Features.feature2]: {
+    prop1: "overridedIn2",
+    prop2: "overridedIn2",
+    prop3: "overridedIn2",
+    prop_for_2: "newProp"
+  },
+}, IState> {
+  
+  render() {
+    this.props;
+    //   ^?
+    return null;
+  }
+}

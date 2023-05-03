@@ -1,6 +1,7 @@
 import { FlagShaperChecker } from "../checker/index";
+import { AllowedFlags } from "../shared/interfaces";
 
-export class FlagShaperForFunctions<Flag extends string> extends FlagShaperChecker<Flag> {
+export class FlagShaperForFunctions<Flag extends AllowedFlags> extends FlagShaperChecker<Flag> {
   /** 
    * This method returns a function that can be executed if the specified feature flag is enabled. 
    * If the feature flag is not enabled, the returned function will do nothing and return `undefined`.

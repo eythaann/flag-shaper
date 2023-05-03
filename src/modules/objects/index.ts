@@ -1,7 +1,8 @@
+import { AnyObject, UnionToIntersection, ValueOf } from "readable-types";
 import { FlagShaperChecker } from "../checker/index";
-import { AnyObject, UnionToIntersection, ValueOf } from "../shared/interfaces";
+import { AllowedFlags } from "../shared/interfaces";
 
-export class FlagShaperForObjects<Flag extends string> extends FlagShaperChecker<Flag> {
+export class FlagShaperForObjects<Flag extends AllowedFlags> extends FlagShaperChecker<Flag> {
 
   public overrideOnDeclaration<Obj extends AnyObject, Over extends Partial<Record<Flag, AnyObject>>>(obj: Obj, overrides: Over) {
     Object.keys(overrides).forEach((key) => {

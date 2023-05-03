@@ -1,0 +1,16 @@
+{
+  "compilerOptions": {
+    "lib": ["ESNext", "DOM"],
+    "moduleResolution": "node",
+    "target": "ES2016",
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
+    "strictFunctionTypes": true,
+    "noImplicitAny": true,
+    "noEmit": true,
+  },
+  "exclude": [
+    "node_modules",
+  ]
+}

@@ -18,13 +18,13 @@ export class FlagShaper<Flag extends AllowedFlags = string> {
   public readonly dec: FlagShaperDecorators<Flag>;
   public readonly decorator: FlagShaperDecorators<Flag>;
 
-  public readonly jsx: FlagShaperJSX<Flag>
+  public readonly jsx: ReturnType<typeof FlagShaperJSX>;
 
   constructor(isFlagEnabled: FlagChecker<Flag>) {
     this.function = new FlagShaperForFunctions(isFlagEnabled);
     this.object = new FlagShaperForObjects(isFlagEnabled);
     this.decorator = new FlagShaperDecorators(isFlagEnabled);
-    this.jsx = new FlagShaperJSX(isFlagEnabled);
+    this.jsx = FlagShaperJSX(isFlagEnabled);
 
     this.fn = this.function;
     this.obj = this.object;

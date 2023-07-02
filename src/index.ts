@@ -1,3 +1,4 @@
+import { If, IsNever, IsUndefined, Or } from "readable-types";
 import { FlagShaper } from "./modules";
 
 
@@ -49,9 +50,10 @@ interface IProps {
 
 interface IState {
   state1: "1",
+  state2: "2",
 }
 
-class TestClassComponent extends FlagByEnv.jsx.Component<IProps, {
+const TestComponent = class TestClassComponent extends FlagByEnv.jsx.Component<IProps, {
   [Features.feature1]: {
     prop1: "overrided",
     prop2: "overrided",
@@ -64,11 +66,54 @@ class TestClassComponent extends FlagByEnv.jsx.Component<IProps, {
     prop3: "overridedIn2",
     prop_for_2: "newProp"
   },
-}, IState> {
-  
+}, IState, {
+  [Features.feature1]: {
+    state1: "overrided",
+    state2: "overrided",
+    state_for_1: "newProp",
+  },
+  [Features.feature2]: {
+    state1: "overridedIn2",
+    state2: "overridedIn2",
+    state_for_2: "newProp"
+  },
+}> {
   render() {
-    this.props;
-    //   ^?
+    if(this.isFlagEnabled(Features.feature1, this.state) && this.isFlagEnabled(Features.feature1, this.props)) {
+      this.props.flagToUse
+    }
+
+    if (this.isFlagEnabled(Features.feature1, this.props)) {
+      
+    }
+
     return null;
   }
 }
+type modifyByFlagExtractor<T, Flag = never> = Or<[IsNever<Flag>, IsUndefined<Flag>]> extends true 
+  ? Omit<Extract<T, {__FLAG__?: undefined}>, '__FLAG__'>
+  : Omit<Extract<T, {__FLAG__: Flag}>, '__FLAG__'>
+
+const _testAPlaceholder = FlagByEnv.obj.modifyByFlagCreator<{
+  prop1: '1',
+  prop2: '2',
+  prop3: '3',
+}, {
+  [Features.feature1]: {
+    prop3: 'modified in 1',
+    newProp: 'added in 1',
+  },
+  [Features.feature2]: {
+    prop3: 'modified in 2',
+    newProp2: 'added in 2',
+  },
+}>();
+
+type testA<Flag = undefined> = modifyByFlagExtractor<typeof _testAPlaceholder, Flag>;
+
+type testB = testA
+//   ^?
+type testC = testA<Features.feature1>
+//   ^?
+type testD = testA<Features.feature2>
+//   ^?

@@ -24,4 +24,7 @@ export class FlagShaperForFunctions<Flag extends AllowedFlags> extends FlagShape
       return fn(...args);
     }
   }
+
+
+  public decorator(){}
 }

@@ -7,11 +7,11 @@ export class FlagShaperChecker<Flag extends AllowedFlags> {
     this.#isFlagEnabled = isFlagEnabled;
   }
 
-  protected isFlagEnabled(flag: Flag): boolean {
+  isFlagEnabled(flag: Flag): boolean {
     return this.#isFlagEnabled(flag);
   }
 
-  protected someFlagIsEnabled(flag: Flag | Flag[]): boolean {
+  someFlagIsEnabled(flag: Flag | Flag[]): boolean {
     return [flag].flat().some(currentFlag => this.isFlagEnabled(currentFlag as Flag));
   }
 }

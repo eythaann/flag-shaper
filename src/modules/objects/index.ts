@@ -1,4 +1,4 @@
-import { AnyObject, UnionToIntersection, ValueOf } from "readable-types";
+import { AnyObject, If, IsNever, Modify, Prettify, UnionToIntersection, ValueOf } from "readable-types";
 import { FlagShaperChecker } from "../checker/index";
 import { AllowedFlags } from "../shared/interfaces";
 
@@ -32,5 +32,20 @@ export class FlagShaperForObjects<Flag extends AllowedFlags> extends FlagShaperC
     })
 
     return obj as Obj & { getOverriddenObject(): Obj & Partial<UnionToIntersection<ValueOf<Over>>> };
+  }
+
+  /** @type */
+  public modifyByFlagCreator<
+    Original extends AnyObject,
+    Overrides extends { [key in Flag]?: AnyObject },
+  >() {
+    type modified = 
+      | ({ __FLAG__?: undefined } & Original)
+      | (
+        Flag extends Flag 
+          ? { __FLAG__: Flag } & Modify<Original, Overrides[Flag]>
+          : never
+      );
+    return {} as Prettify<modified>;
   }
 }

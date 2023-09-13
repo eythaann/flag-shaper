@@ -1,6 +1,6 @@
 import { FlagShaperChecker } from "../checker/index";
-import { AllowedFlags } from "../shared/interfaces";
+import { AllowedFlags, IConfig } from "../shared/domain/interfaces";
 
-export class FlagShaperDecorators<Flag extends AllowedFlags> extends FlagShaperChecker<Flag> {
+export class FlagShaperDecorators<Flag extends AllowedFlags, Config extends IConfig> extends FlagShaperChecker<Flag, Config> {
   
 }

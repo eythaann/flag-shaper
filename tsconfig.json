@@ -1,15 +1,18 @@
 {
   "compilerOptions": {
     "lib": ["ESNext", "DOM"],
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "target": "ES2016",
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
     "strictFunctionTypes": true,
     "noImplicitAny": true,
+    "noUncheckedIndexedAccess": true,
+    "noFallthroughCasesInSwitch": true,
     "noEmit": true,
     "jsx": "react",
+    "noErrorTruncation": true,
   },
   "exclude": [
     "node_modules",

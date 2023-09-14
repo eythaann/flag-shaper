@@ -8,5 +8,5 @@ export interface IConfig {
 }
 
 export interface Metadata<T = AnyObject> {
-  __metadata: T;
+  __metadata?: T;
 }

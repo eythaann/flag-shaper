@@ -1,11 +1,7 @@
 import { Component, JSXElementConstructor } from "react";
 import { FlagShaperChecker } from "../checker";
-import { AllowedFlags, FlagChecker, IConfig } from "../shared/domain/interfaces";
+import { AllowedFlags, FlagChecker, IConfig, Metadata } from "../shared/domain/interfaces";
 import { AnyFunction, AnyObject, EmptyObject, If, KeyOfObject, Modify, ModifyByKeyPlusOrderedCombinations } from "readable-types";
-
-export type Prettify<T> = {
-  [K in keyof T]: T[K];
-} & {};
 
 export interface ConfigToConnect {
   props?: {},
@@ -18,8 +14,7 @@ export interface ConfigToConnect {
   dispatchPropsOverwrites?: [[string, {}], ...[string, {}][]],
 }
 
-export interface FlaggedPropsAndState {
-  __metadata: ConfigToConnect;
+export interface FlaggedPropsAndState extends Metadata<ConfigToConnect> {
   ExternalProps: {};
   InternalState: {};
   ReduxStateProps: {};
@@ -34,22 +29,6 @@ export class FlagShaperJSX<Flag extends AllowedFlags, Config extends IConfig> ex
   ): JSXElementConstructor<T> {
     if (this.someFlagIsEnabled(flag)) return component;
     return () => null;
-  }
-
-  Component = class ComponentWithFlags<
-    Props extends AnyObject = EmptyObject,
-    PropsOverwrites extends [[Flag, AnyObject], ...[Flag, AnyObject][]] | [] = [],
-    State extends AnyObject = EmptyObject,
-    StateOverwrites extends [[Flag, AnyObject], ...[Flag, AnyObject][]] | [] = [],
-    SS = any,
-    realProps = ModifyByKeyPlusOrderedCombinations<Props, PropsOverwrites, Config['keyForOverwrites']>,
-    realState = ModifyByKeyPlusOrderedCombinations<State, StateOverwrites, Config['keyForOverwrites']>
-  > extends Component<realProps, realState, SS> {
-  
-  /* protected isFlagEnabled<T extends Flag>(flag: T, o: Prettify<GetProps<Props, PropsOverwrites>> | Prettify<GetProps<State, StateOverwrites>>): o is typeof o & { flagToUse: T } {
-    return o.flagToUse === flag && isFlagEnabled(flag);
-  } */
-  
   }
 };
 

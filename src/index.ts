@@ -3,6 +3,7 @@ import { connect } from "react-redux";
 import { Cast, If, IsUndefined, IsUnknown, IteratorHKT, Modify, ModifyByKeyPlusOrderedCombinations, Or, TupleIncludes, TupleReduceHTK } from "readable-types";
 import { FlagShaper } from "./modules";
 import { ConfigToConnect, FSConnectCreator } from "./modules/jsx";
+import { ReduxState, selectTest1, selectTest2 } from "./modules/redux/infra";
 
 
 enum Features {
@@ -147,7 +148,7 @@ interface testjsx {
   stateProps: IMapStateToProps;
   statePropsOverwrites: [
     [Features.feature2, {
-      stateToProp1: string,
+      stateToProp1: string[],
       stateToProp2: string,
     }],
   ];
@@ -194,11 +195,15 @@ const TestComponent = class TestClassComponent extends Component<ComponentStateA
   }
 }
 
-const mapStateToProps = (state: any, ownProps: ComponentStateAndProps['ExternalProps']) => {
-  return FlagByEnv.obj.overwriteOnDeclaration<ComponentStateAndProps>({ 'stateToProp1': 123 }, [
+const test = selectTest1({} as ReduxState);
+
+const mapStateToProps = (state: ReduxState, ownProps: ComponentStateAndProps['ExternalProps']) => {
+  return FlagByEnv.obj.overwriteOnDeclaration<ComponentStateAndProps>({ 
+    stateToProp1: selectTest1(state), 
+  }, [
     [Features.feature2, {
-      'stateToProp1': 'test',
-      'stateToProp2': 'test',
+      stateToProp1: selectTest1<['featureA']>(state),
+      stateToProp2: selectTest2(state),
     }]
   ]);
 }

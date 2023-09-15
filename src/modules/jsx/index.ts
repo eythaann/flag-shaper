@@ -1,7 +1,7 @@
-import { Component, JSXElementConstructor } from "react";
+import { JSXElementConstructor } from "react";
 import { FlagShaperChecker } from "../checker";
-import { AllowedFlags, FlagChecker, IConfig, Metadata } from "../shared/domain/interfaces";
-import { AnyFunction, AnyObject, EmptyObject, If, KeyOfObject, Modify, ModifyByKeyPlusOrderedCombinations } from "readable-types";
+import { AllowedFlags, IConfig, Metadata } from "../shared/domain/interfaces";
+import { AnyFunction } from "readable-types";
 
 export interface ConfigToConnect {
   props?: {},

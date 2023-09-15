@@ -4,8 +4,6 @@ import { keyOf } from "../shared/app/utils";
 import { AllowedFlags, IConfig, Metadata } from "../shared/domain/interfaces";
 import { customExtract } from "./app";
 
-
-
 export class FlagShaperForObjects<Flag extends AllowedFlags, Config extends IConfig> extends FlagShaperChecker<Flag, Config> {
 
   public overwriteOnDeclaration<

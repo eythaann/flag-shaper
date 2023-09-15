@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Cast, If, IsUndefined, IsUnknown, IteratorHKT, Modify, ModifyByKeyPlusOrderedCombinations, Or, TupleIncludes, TupleReduceHTK } from "readable-types";
 import { FlagShaper } from "./modules";
 import { ConfigToConnect, FSConnectCreator } from "./modules/jsx";
-import { ReduxState, selectTest1, selectTest2 } from "./modules/redux/infra";
+import { ReduxState, selectTest1, selectTest2 } from "./modules/redux/index.test-types";
 
 
 enum Features {
@@ -191,7 +191,7 @@ const TestComponent = class TestClassComponent extends Component<ComponentStateA
       this.state.flagToUse
     }
 
-    return null;
+    return undefined;
   }
 }
 

@@ -1,9 +1,9 @@
 import { DefaultConfig } from '../shared/domain/constants';
 import { AllowedFlags, FlagChecker, IConfig } from '../shared/domain/interfaces';
 
-export class FlagShaperChecker<Flag extends AllowedFlags, Config extends IConfig> {
+export abstract class FlagShaperChecker<Flag extends AllowedFlags, Config extends IConfig> {
   readonly #isFlagEnabled: FlagChecker<Flag>;
-  readonly config: Config
+  protected readonly config: Config
 
   constructor(isFlagEnabled: FlagChecker<Flag>, config: Config) {
     this.#isFlagEnabled = isFlagEnabled;

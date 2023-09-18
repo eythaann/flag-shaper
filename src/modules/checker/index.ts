@@ -3,7 +3,7 @@ import { AllowedFlags, FlagChecker, IConfig } from '../shared/domain/interfaces'
 
 export abstract class FlagShaperChecker<Flag extends AllowedFlags, Config extends IConfig> {
   readonly #isFlagEnabled: FlagChecker<Flag>;
-  protected readonly config: Config
+  protected readonly config: Config;
 
   constructor(isFlagEnabled: FlagChecker<Flag>, config: Config) {
     this.#isFlagEnabled = isFlagEnabled;
@@ -15,6 +15,6 @@ export abstract class FlagShaperChecker<Flag extends AllowedFlags, Config extend
   }
 
   someFlagIsEnabled(flag: Flag | Flag[]): boolean {
-    return [flag].flat().some(currentFlag => this.isFlagEnabled(currentFlag as Flag));
+    return [flag].flat().some((currentFlag) => this.isFlagEnabled(currentFlag as Flag));
   }
 }

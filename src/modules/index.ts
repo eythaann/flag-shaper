@@ -1,11 +1,10 @@
-import { FlagShaperDecorators } from "./decorators";
-import { FlagShaperForFunctions } from "./functions/index";
-import { FlagShaperJSX } from "./jsx";
-import { FlagShaperForObjects } from "./objects/index";
-import { ReduxFlagShaper } from "./redux/infra";
-import { DefaultConfig } from "./shared/domain/constants";
-import { AllowedFlags, FlagChecker, IConfig } from "./shared/domain/interfaces";
-
+import { FlagShaperDecorators } from './decorators';
+import { FlagShaperForFunctions } from './functions/index';
+import { FlagShaperJSX } from './jsx';
+import { FlagShaperForObjects } from './objects/index';
+import { ReduxFlagShaper } from './redux/infra';
+import { DefaultConfig } from './shared/domain/constants';
+import { AllowedFlags, FlagChecker, IConfig } from './shared/domain/interfaces';
 
 export class FlagShaper<
   Flag extends AllowedFlags = string,

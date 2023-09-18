@@ -1,3 +1,3 @@
 export const DefaultConfig = {
-  keyForOverwrites: 'overwrittenWith'
+  keyForOverwrites: 'overwrittenWith',
 } as const;

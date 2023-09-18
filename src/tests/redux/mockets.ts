@@ -42,8 +42,8 @@ export const MocketState: ReduxState = {
         reallyDeep1: Boolean(),
         reallyDeep2: Boolean(),
         reallyDeep3: Boolean(),
-      }
+      },
     },
     test4_2: [{}, {}] as ITest4[],
   },
-}
+};

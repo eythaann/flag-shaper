@@ -1,4 +1,4 @@
-import { ExtractByFlags, ModifyUsingInterface } from "./app";
+import { ExtractByFlags, ModifyUsingInterface } from './app';
 
 interface OldITestDeep {
   testDeep1: number;
@@ -9,19 +9,19 @@ interface OldITestDeep {
 type ITestDeep = ModifyUsingInterface<OldITestDeep, [
   ['featureA', { testDeep1: string }],
   ['featureC', { addedInC: boolean[] }]
-]>
+]>;
 
 interface OldIProp4 {
   test1: number;
   test2: string;
   test3: string;
-  test4: ITestDeep
+  test4: ITestDeep;
 }
 
 type IProp4 = ModifyUsingInterface<OldIProp4, [
   ['featureA', { test1: string }],
   ['featureB', { test2: number }]
-]>
+]>;
 
 interface OldReduxState {
   prop1: string[];
@@ -33,11 +33,9 @@ interface OldReduxState {
 export type ReduxStateType = ModifyUsingInterface<OldReduxState, [
   ['featureA', { prop3: number[] }],
   ['featureB', { prop3: boolean[] }]
-]>
-
+]>;
 
 const ReduxState = {} as ReduxStateType;
-
 
 const ReduxStateFC = {} as ExtractByFlags<ReduxStateType, ['featureC']>;
 
@@ -55,7 +53,7 @@ const ReduxStateFA: ExtractByFlags<ReduxStateType, ['featureA']> = {
       testDeep3: Number(),
     },
   },
-}
+};
 
 const selectorBuilder = new SelectorBuilder<ReduxStateType>();
 

@@ -9,8 +9,14 @@ import { cloneDeep } from '@shared/app/utils';
 import { ExtractByFlags, ModifyUsingInterface } from '@modules/redux/app';
 
 import { DefaultConfig } from '@shared/domain/constants';
+import { IConfig } from '@shared/domain/interfaces';
 
-const FakeReduxFlagShaper = new ReduxFlagShaper<FlagsToTest, typeof DefaultConfig>(new FlagShaperChecker((a: FlagsToTest) => {
+class ReduxFlagShaperForTest<Config extends IConfig> extends ReduxFlagShaper<FlagsToTest, Config> {
+  public readonly config: Config;
+}
+
+type FakeReduxFlagShaper = typeof FakeReduxFlagShaper;
+const FakeReduxFlagShaper = new ReduxFlagShaperForTest(new FlagShaperChecker((a: FlagsToTest) => {
   return [FlagsToTest.flagA].includes(a);
 }), DefaultConfig);
 
@@ -39,13 +45,13 @@ describe('ReduxFlagShaper', () => {
     });
 
     it('Should allow mix states', () => {
-      type State = Modify<ReduxState, { prop4: Modify<IProp4, { test4: ModifyUsingInterface<ITest4, [
+      type State = Modify<ReduxState, { prop4: Modify<IProp4, { test4: ModifyUsingInterface<FakeReduxFlagShaper, ITest4, [
         [FlagsToTest.flagA, {
           addedInA: 'eythanWasHere';
         }]
       ]>; }>; }>;
 
-      const state = MocketState as ExtractByFlags<State, [FlagsToTest.flagA]>;
+      const state = MocketState as ExtractByFlags<FakeReduxFlagShaper, State, [FlagsToTest.flagA]>;
       state.prop4.test4.addedInA = 'eythanWasHere';
 
       const selectorBuilder = FakeReduxFlagShaper.getSelectorBuilder<State>();

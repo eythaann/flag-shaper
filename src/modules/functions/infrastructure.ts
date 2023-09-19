@@ -1,6 +1,6 @@
 import { AnyFunction, NonUndefined, ValueOf } from 'readable-types';
 
-import { BaseFlagger } from '@shared/app/baseFlagger';
+import { BaseFlagger } from '@shared/BaseFlagger/app';
 
 import { AllowedFlags, IConfig } from '@shared/domain/interfaces';
 

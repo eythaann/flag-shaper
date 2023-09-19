@@ -1,0 +1,93 @@
+import {
+  AnyObject,
+  Cast,
+  HasProperty,
+  IsStrictObject,
+  IteratorHKT,
+  Modify,
+  ModifyByKeyPlusOrderedCombinations,
+  NonUndefined,
+  TupleReduceHKT,
+} from 'readable-types';
+
+import { IConfig, Metadata } from '@shared/domain/interfaces';
+
+type TupleType<T> = [T, ...T[]];
+
+type __ExtractByFlags<
+  T,
+  Flags extends [string, ...string[]] | [],
+  KeyToDiscriminate extends string,
+> = {
+  [Key in keyof T as Key extends KeyToDiscriminate ? never : Key]: IsStrictObject<T[Key]> extends true
+    ? ExtractByFlags<{ config: { keyForOverwrites: KeyToDiscriminate } }, Cast<T[Key], AnyObject>, Flags>
+    : T[Key]
+};
+
+interface ReduceFlags<FlagsOnObject> extends IteratorHKT.Tuple {
+  initialAcc: [];
+  return: this['current'] extends FlagsOnObject ? _RT.Array.forceConcat<this['acc'], [this['current']]> : this['acc'];
+}
+
+type _ExtractByFlags<
+  T extends Metadata<{ types: { [_ in KeyToDiscriminate]?: unknown[] } }>,
+  Flags extends [string, ...string[]] | [],
+  KeyToDiscriminate extends string,
+  FilteredFlags = TupleReduceHKT<Flags, ReduceFlags< NonUndefined<NonUndefined<T['__metadata']>['types'][KeyToDiscriminate]>[number] > >,
+
+> = HasProperty<T, '__metadata'> extends false
+  ? __ExtractByFlags<T, Flags, KeyToDiscriminate>
+  : __ExtractByFlags<
+  Extract< NonUndefined<T['__metadata']>['types'], FilteredFlags extends []
+    ? { [_ in KeyToDiscriminate]?: undefined }
+    : { [_ in KeyToDiscriminate]: FilteredFlags } >,
+  Flags,
+  KeyToDiscriminate
+  > & Metadata<T['__metadata']>;
+
+/**
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+export type ExtractByFlags<
+  Flagger extends { config: { keyForOverwrites: string } },
+  Type extends AnyObject,
+  Flags extends [string, ...string[]] | [],
+> = _ExtractByFlags<Type, Flags, Flagger['config']['keyForOverwrites']>;
+
+/**
+ *
+ *
+ *
+ *
+ *
+ *
+ */
+export type ModifyUsingInterface<
+  Flagger extends { config: IConfig },
+  TypeBeforeFlags,
+  Overwrittes extends TupleType<[NonUndefined<Flagger['config']['flags']>, AnyObject]>,
+> = Modify<TypeBeforeFlags, Metadata<{
+  unique: 'none';
+  types: ModifyByKeyPlusOrderedCombinations<TypeBeforeFlags, Overwrittes, Flagger['config']['keyForOverwrites']> & {};
+}>>;
+// ---
+
+// -- -- -- -- -- --
+/* export type Concrete<T extends AnyObject> = Prettify<_Concrete<T>>;
+
+type _Concrete<
+  T extends Metadata<{ types: { flagToUse?: unknown[] } }>,
+> = HasProperty<T, '__metadata'> extends false
+  ? __ConcreteProperties<T>
+  : __ConcreteProperties<NonUndefined<T['__metadata']>['types']>;
+
+type __ConcreteProperties<T> = {
+  [Key in keyof T]: IsStrictObject<T[Key]> extends true
+    ? Concrete<T[Key]>
+    : T[Key]
+}; */

@@ -2,8 +2,8 @@ import { JSXElementConstructor } from 'react';
 import { AnyObject } from 'readable-types';
 
 import { FlaggedPropsAndState } from '@modules/jsx/infrastructure';
-import { createSelectorBuilder } from './SelectorBuilder/infrastructure';
-import { createSliceTools } from './SliceTools/infrastructure';
+import { createSelectorBuilder } from '../SelectorBuilder/infrastructure';
+import { createSliceTools } from '../SliceTools/infrastructure';
 
 import { BaseFlagger } from '@shared/BaseFlagger/app';
 

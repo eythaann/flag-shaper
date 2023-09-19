@@ -1,6 +1,6 @@
 import { JSXElementConstructor } from 'react';
 
-import { BaseFlagger } from '@shared/app/baseFlagger';
+import { BaseFlagger } from '@shared/BaseFlagger/app';
 
 import { AllowedFlags, IConfig, Metadata } from '@shared/domain/interfaces';
 

@@ -1,7 +1,7 @@
 import { ActionReducerMapBuilder, CaseReducer, CaseReducerWithPrepare, PayloadAction, Slice, SliceCaseReducers, ValidateSliceCaseReducers } from '@reduxjs/toolkit';
 import { AnyObject, IsFunction, IsStrictObject, NonUndefined, ValueOf } from 'readable-types';
 
-import { ExtractByFlags } from '../app';
+import { ExtractByFlags } from '../Flagger/app';
 
 import { AllowedFlags } from '@shared/domain/interfaces';
 

@@ -1,5 +1,3 @@
-import { FlagShaper } from '.';
-import { ReduxState, ReduxStateType } from './modules/redux/index.test-types';
 import { FlagsToTest } from './tests/shared/common';
 import { createSlice as createSliceFn, PayloadAction } from '@reduxjs/toolkit';
 import { Component } from 'react';
@@ -7,9 +5,13 @@ import { connect as connectFn } from 'react-redux';
 import { AnyObject, Cast, If, IsUndefined, IsUnknown, IteratorHKT, Modify, ModifyByKeyPlusOrderedCombinations, NonUndefined, Or, TupleIncludes, TupleReduceHKT } from 'readable-types';
 
 import { ConfigToConnect } from './modules/jsx/infrastructure';
+import { FlagShaper } from './modules/RootFlagger/infrastructure';
+
+import { ExtractByFlags, ModifyUsingInterface } from '@modules/redux/Flagger/app';
 
 const EnabledFeatures: FlagsToTest[] = [FlagsToTest.flagA];
 
+type Flagger = typeof Flagger;
 const Flagger = new FlagShaper((feature: FlagsToTest) => {
   return EnabledFeatures.includes(feature);
 }, {
@@ -51,7 +53,107 @@ if (
   testObj;
 }
 
-// ----- --------- --------- --------- --------- --------- --------- ----------
+// ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
+// ----- --------- -------- REDUX CREATING A STATE --------- --------- ----------
+// ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
+
+interface OldITestDeep {
+  testDeep1: number;
+  testDeep2: number;
+  testDeep3: number;
+}
+
+type ITestDeep = ModifyUsingInterface<Flagger, OldITestDeep, [
+  [FlagsToTest.flagA, { testDeep1: string }],
+  [FlagsToTest.flagC, { addedInC: boolean[] }]
+]>;
+
+interface OldIProp4 {
+  test1: number;
+  test2: string;
+  test3: string;
+  test4: ITestDeep;
+}
+
+type IProp4 = ModifyUsingInterface<Flagger, OldIProp4, [
+  [FlagsToTest.flagA, { test1: string }],
+  [FlagsToTest.flagB, { test2: number }]
+]>;
+
+interface OldReduxState {
+  prop1: string[];
+  prop2: string[];
+  prop3: string[];
+  prop4: IProp4;
+}
+
+export type ReduxStateType = ModifyUsingInterface<Flagger, OldReduxState, [
+  [FlagsToTest.flagA, { prop3: number[] }],
+  [FlagsToTest.flagB, { prop3: boolean[] }]
+]>;
+
+export const ReduxState = {} as ReduxStateType;
+
+const ReduxStateFC = {} as ExtractByFlags<Flagger, ReduxStateType, [FlagsToTest.flagC]>;
+
+const ReduxStateFA: ExtractByFlags<Flagger, ReduxStateType, [FlagsToTest.flagA]> = {
+  prop1: [String()],
+  prop2: [String()],
+  prop3: [Number()],
+  prop4: {
+    test1: String(),
+    test2: String(),
+    test3: String(),
+    test4: {
+      testDeep1: String(),
+      testDeep2: Number(),
+      testDeep3: Number(),
+    },
+  },
+};
+
+const selectorBuilder = Flagger.rx.getSelectorBuilder<ReduxStateType>();
+
+const selectProp4 = selectorBuilder.createSelector('prop4');
+
+const selectTest1 = selectorBuilder.createSelectorFrom(selectProp4, 'test1');
+const selectTest4 = selectorBuilder.createSelectorFrom(selectProp4, 'test4');
+
+const selectDeep = selectorBuilder.createSelectorFrom(selectTest4, 'addedInC');
+
+const selectDeepAlternative = selectorBuilder.createSelector(['prop4', 'test4', 'testDeep1']);
+
+const t1 = selectTest4(ReduxStateFA);
+//     ^?
+
+const t2 = selectDeep(ReduxState);
+//     ^?
+
+const t3 = selectDeep(ReduxStateFC);
+//     ^?
+
+const t4 = selectDeepAlternative(ReduxStateFA);
+//     ^?
+
+if (Flagger.checker.isFlagEnabled(FlagsToTest.flagA)) {
+
+}
+
+// ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
+// ----------------------- REACT CLASS WITH REDUX ----------------------
+// ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
+// ---------------------------------------------------------------------
 
 interface testR2<KeyToFilter> extends IteratorHKT.Tuple<[string, {}]> {
   initialAcc: {};
@@ -82,11 +184,11 @@ interface MagnifigThing<T extends ConfigToConnect, Key extends string> {
 
   completeProps: ModifyByKeyPlusOrderedCombinations<
   Modify<Modify<T['props'], T['stateProps']>, T['dispatchProps']>,
-  TupleReduceHKT<[
+  Cast<TupleReduceHKT<[
     ...Cast<DefaultValue<T['propsOverwrites'], []>, any[]>,
     ...Cast<DefaultValue<T['statePropsOverwrites'], []>, any[]>,
     ...Cast<DefaultValue<T['dispatchPropsOverwrites'], []>, any[]>,
-  ], testR1>,
+  ], testR1>, [[string, AnyObject], ...[string, AnyObject][]]>,
   Key
   >;
 }
@@ -209,6 +311,8 @@ const mapStateToProps = (state: ReduxStateType, ownProps: ComponentStateAndProps
 };
 
 const _P = Flagger.redux.connect<ComponentStateAndProps>(mapStateToProps)(TestComponent);
+
+// ----------------------- CREATING REDUCER WITH REDUX ----------------------
 
 const { createSlice, reducerByFlag } = Flagger.redux.getSliceTools<ReduxStateType>();
 

@@ -1,4 +1,4 @@
-import { BaseFlagger } from '@shared/app/baseFlagger';
+import { BaseFlagger } from '@shared/BaseFlagger/app';
 
 import { AllowedFlags, IConfig } from '@shared/domain/interfaces';
 

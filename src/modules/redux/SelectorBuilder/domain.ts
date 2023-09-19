@@ -1,8 +1,28 @@
-import { AnyFunction, AnyObject, NonUndefined } from 'readable-types';
-
-import { getAllPosibleKeys, SelectorByFlag } from '../app';
+import { AnyFunction, AnyObject, HasProperty, IsUnknown, IteratorHKT, KeysOfUnion, NonUndefined, TupleReduceHKT } from 'readable-types';
 
 import { Metadata } from '@shared/domain/interfaces';
+
+interface extractTypeFormPath<state> extends IteratorHKT.Tuple {
+  initialAcc: state;
+  return: _RT.ForceExtract<this['acc'], this['current']>;
+}
+
+type SelectorByFlag<State extends AnyObject, Path extends unknown[]> = (
+  <S extends IsUnknown<State['__metadata']> extends false
+    ? S['__metadata'] extends State['__metadata']
+      ? Metadata<State['__metadata']>
+      : Required<Metadata<State['__metadata']>>
+    : State
+  >(state: S) => TupleReduceHKT<Path, extractTypeFormPath<S>>
+) & Metadata<Path>;
+
+type getAllPosibleKeys<
+  State,
+  Fn extends Metadata<string[]>,
+  R = TupleReduceHKT<NonUndefined<Fn['__metadata']>, extractTypeFormPath<State>>
+> = HasProperty<R, '__metadata'> extends false
+  ? keyof R
+  : Exclude<KeysOfUnion<_RT.ForceExtract<NonUndefined<_RT.ForceExtract<R, '__metadata'>>, 'types'>>, 'flagToUse'>;
 
 export interface ISelectorBuilder<State extends AnyObject> {
   createSelector<K extends getAllPosibleKeys<State, Metadata<[]>>>(key: K): SelectorByFlag<State, [K]>;

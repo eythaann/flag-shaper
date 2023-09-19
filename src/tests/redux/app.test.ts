@@ -2,7 +2,7 @@ import { FlagsToTest } from '../shared/common';
 import { IProp4, ITest4, ITestDeep4, ReduxState } from './mockets';
 import { Modify } from 'readable-types';
 
-import { getAllPosibleKeys, ModifyUsingInterface } from '../../modules/redux/app';
+import { getAllPosibleKeys, ModifyUsingInterface } from '../../modules/redux/Flagger/app';
 
 import { Metadata } from '../../modules/shared/domain/interfaces';
 

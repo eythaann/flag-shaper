@@ -1,5 +1,6 @@
-import { AnyObject, IsStrictObject, IsUnknown, IteratorHKT, NonUndefined, KeysOfUnion, Modify, ModifyByKeyPlusOrderedCombinations, Prettify, TupleReduceHKT, HasProperty } from 'readable-types';
-import { Metadata } from '../shared/domain/interfaces';
+import { AnyObject, HasProperty, IsStrictObject, IsUnknown, IteratorHKT, KeysOfUnion, Modify, ModifyByKeyPlusOrderedCombinations, NonUndefined, Prettify, TupleReduceHKT } from 'readable-types';
+
+import { Metadata } from '@shared/domain/interfaces';
 
 export type ModifyUsingInterface<T, V, U = 'none'> = Modify<T, Metadata<{
   unique: U;

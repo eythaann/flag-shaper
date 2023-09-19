@@ -1,8 +1,10 @@
-import { Modify } from 'readable-types';
-import { getAllPosibleKeys, ModifyUsingInterface } from '../../modules/redux/app';
-import { Metadata } from '../../modules/shared/domain/interfaces';
 import { FlagsToTest } from '../shared/common';
-import { ReduxState, IProp4, ITest4, ITestDeep4 } from './mockets';
+import { IProp4, ITest4, ITestDeep4, ReduxState } from './mockets';
+import { Modify } from 'readable-types';
+
+import { getAllPosibleKeys, ModifyUsingInterface } from '../../modules/redux/app';
+
+import { Metadata } from '../../modules/shared/domain/interfaces';
 
 describe('getAllPosibleKeys', () => {
   it('Should give me the keys of path', () => {

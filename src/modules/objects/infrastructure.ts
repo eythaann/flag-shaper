@@ -1,11 +1,11 @@
-import { AnyObject, HasProperty, ModifyByKeyPlusOrderedCombinations } from 'readable-types';
-import { FlagShaperChecker } from '../checker/index';
-import { ExtractByFlags } from '../redux/app';
-import { ReduxMetadata } from '../redux/domain';
-import { AllowedFlags, IConfig, Metadata } from '../shared/domain/interfaces';
+import { AnyObject, ModifyByKeyPlusOrderedCombinations } from 'readable-types';
+
+import { BaseFlagger } from '@shared/BaseFlagger/app';
 import { customExtractObj } from './app';
 
-export class FlagShaperForObjects<Flag extends AllowedFlags, Config extends IConfig> extends FlagShaperChecker<Flag, Config> {
+import { AllowedFlags, IConfig, Metadata } from '@shared/domain/interfaces';
+
+export class FlagShaperForObjects<Flag extends AllowedFlags, Config extends IConfig> extends BaseFlagger<Flag, Config> {
   public overwriteOnDeclaration<
     Obj extends AnyObject,
     Over extends [[Flag, AnyObject], ...[Flag, AnyObject][]]
@@ -22,7 +22,7 @@ export class FlagShaperForObjects<Flag extends AllowedFlags, Config extends ICon
     const newObject: any = obj;
 
     overrides.forEach(([flag, override]: [Flag, AnyObject]) => {
-      if (!this.isFlagEnabled(flag)) {
+      if (!this.checker.isFlagEnabled(flag)) {
         return;
       }
 

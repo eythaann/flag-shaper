@@ -1,7 +1,8 @@
 import { JSXElementConstructor } from 'react';
-import { FlagShaperChecker } from '../checker';
-import { AllowedFlags, IConfig, Metadata } from '../shared/domain/interfaces';
-import { AnyFunction } from 'readable-types';
+
+import { BaseFlagger } from '@shared/app/baseFlagger';
+
+import { AllowedFlags, IConfig, Metadata } from '@shared/domain/interfaces';
 
 export interface ConfigToConnect {
   props?: {};
@@ -22,12 +23,12 @@ export interface FlaggedPropsAndState extends Metadata<ConfigToConnect> {
   completeProps: {};
 }
 
-export class FlagShaperJSX<Flag extends AllowedFlags, Config extends IConfig> extends FlagShaperChecker<Flag, Config> {
+export class FlagShaperJSX<Flag extends AllowedFlags, Config extends IConfig> extends BaseFlagger<Flag, Config> {
   enableComponentIn<T>(
     flag: Flag | Flag[],
     component: JSXElementConstructor<T>,
   ): JSXElementConstructor<T> {
-    if (this.someFlagIsEnabled(flag)) {
+    if (this.checker.someFlagIsEnabled(flag)) {
       return component;
     }
     return () => null;

@@ -1,4 +1,4 @@
-import { Metadata } from '../shared/domain/interfaces';
+import { Metadata } from '@shared/domain/interfaces';
 
 export type ReduxMetadata = Metadata<{
   unique: string;

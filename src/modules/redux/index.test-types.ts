@@ -1,7 +1,10 @@
 import { FlagsToTest } from '../../tests/shared/common';
-import { DefaultConfig } from '../shared/domain/constants';
+
+import { ReduxFlagShaper } from './infrastructure';
+
 import { ExtractByFlags, ModifyUsingInterface } from './app';
-import { ReduxFlagShaper } from './infra';
+
+import { DefaultConfig } from '../shared/domain/constants';
 
 interface OldITestDeep {
   testDeep1: number;

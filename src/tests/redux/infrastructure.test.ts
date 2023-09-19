@@ -1,14 +1,18 @@
-import { Modify } from 'readable-types';
-import { ExtractByFlags, ModifyUsingInterface } from '../../modules/redux/app';
-import { ReduxFlagShaper } from '../../modules/redux/infra';
-import { cloneDeep } from '../../modules/shared/app/utils';
-import { DefaultConfig } from '../../modules/shared/domain/constants';
 import { FlagsToTest } from '../shared/common';
 import { IProp4, ITest4, MocketState, ReduxState } from './mockets';
+import { Modify } from 'readable-types';
 
-const FakeReduxFlagShaper = new ReduxFlagShaper<FlagsToTest, typeof DefaultConfig>((a: FlagsToTest) => {
+import { FlagShaperChecker } from '@modules/checker/infrastructure';
+import { ReduxFlagShaper } from '@modules/redux/infrastructure';
+
+import { cloneDeep } from '@shared/app/utils';
+import { ExtractByFlags, ModifyUsingInterface } from '@modules/redux/app';
+
+import { DefaultConfig } from '@shared/domain/constants';
+
+const FakeReduxFlagShaper = new ReduxFlagShaper<FlagsToTest, typeof DefaultConfig>(new FlagShaperChecker((a: FlagsToTest) => {
   return [FlagsToTest.flagA].includes(a);
-}, DefaultConfig);
+}), DefaultConfig);
 
 describe('ReduxFlagShaper', () => {
   describe('SelectorBuilder', () => {
@@ -19,7 +23,7 @@ describe('ReduxFlagShaper', () => {
     });
 
     it('Should allow not flagged states', () => {
-      const selectorBuilder = new FakeReduxFlagShaper.SelectorBuilder<ReduxState>();
+      const selectorBuilder = FakeReduxFlagShaper.getSelectorBuilder<ReduxState>();
 
       const selector = selectorBuilder.createSelector('prop1');
       const deepSelector = selectorBuilder.createSelector(['prop4', 'test4', 'testDeep4', 'reallyDeep3']);
@@ -44,7 +48,7 @@ describe('ReduxFlagShaper', () => {
       const state = MocketState as ExtractByFlags<State, [FlagsToTest.flagA]>;
       state.prop4.test4.addedInA = 'eythanWasHere';
 
-      const selectorBuilder = new FakeReduxFlagShaper.SelectorBuilder<State>();
+      const selectorBuilder = FakeReduxFlagShaper.getSelectorBuilder<State>();
       const selector = selectorBuilder.createSelector(['prop4', 'test4', 'addedInA']);
       const selectedItem = selector(state);
 
@@ -56,7 +60,7 @@ describe('ReduxFlagShaper', () => {
     it('should allow array Selections');
 
     it('should allow anidate selectors', () => {
-      const selectorBuilder = new FakeReduxFlagShaper.SelectorBuilder<ReduxState>();
+      const selectorBuilder = FakeReduxFlagShaper.getSelectorBuilder<ReduxState>();
 
       const selectProp4 = selectorBuilder.createSelector('prop4');
       const selectTest4 = selectorBuilder.createSelectorFrom(selectProp4, 'test4');

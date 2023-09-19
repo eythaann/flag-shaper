@@ -1,7 +1,7 @@
 import { AnyFunction } from 'readable-types';
 
 export type AllowedFlags = string;
-export type FlagChecker<Flag extends AllowedFlags> = (flag: Flag) => boolean; // TODO | (flag: Flag) => Promise<boolean>;
+export type FlagCheckerFn<Flag extends AllowedFlags> = (flag: Flag) => boolean; // TODO | (flag: Flag) => Promise<boolean>;
 
 export interface IConfig {
   readonly keyForOverwrites: string;

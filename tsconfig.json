@@ -13,6 +13,11 @@
     "noEmit": true,
     "jsx": "react",
     "noErrorTruncation": true,
+    "baseUrl": "./src",
+    "paths": {
+      "@shared/*": ["./modules/shared/*"],
+      "@modules/*": ["./modules/*"],
+    }
   },
   "exclude": [
     "node_modules",

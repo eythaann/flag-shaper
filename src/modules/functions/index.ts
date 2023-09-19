@@ -1,15 +1,17 @@
 import { AnyFunction, NonUndefined, ValueOf } from 'readable-types';
-import { FlagShaperChecker } from '../checker/index';
-import { AllowedFlags, IConfig } from '../shared/domain/interfaces';
 
-export class FlagShaperForFunctions<Flag extends AllowedFlags, Config extends IConfig> extends FlagShaperChecker<Flag, Config> {
+import { BaseFlagger } from '@shared/app/baseFlagger';
+
+import { AllowedFlags, IConfig } from '@shared/domain/interfaces';
+
+export class FlagShaperForFunctions<Flag extends AllowedFlags, Config extends IConfig> extends BaseFlagger<Flag, Config> {
   /**
    * This method returns a function that can be executed if the specified feature flag is enabled.
    * If the feature flag is not enabled, the returned function will do nothing and return `undefined`.
    */
   public executableIn<T extends AnyFunction>(flag: Flag | Flag[], fn: T) {
     return (...args: Parameters<T>): ReturnType<T> | undefined => {
-      if (!this.someFlagIsEnabled(flag)) {
+      if (!this.checker.isFlagEnabled(flag)) {
         return;
       }
       return fn(...args);
@@ -23,7 +25,7 @@ export class FlagShaperForFunctions<Flag extends AllowedFlags, Config extends IC
    */
   public callableIn<T extends AnyFunction>(flag: Flag | Flag[], fn: T) {
     return (...args: Parameters<T>): ReturnType<T> => {
-      if (!this.someFlagIsEnabled(flag)) {
+      if (!this.checker.someFlagIsEnabled(flag)) {
         throw new Error(`${fn.name || 'anonymous'} fn() not is callable if flag not is enabled`);
       }
       return fn(...args);

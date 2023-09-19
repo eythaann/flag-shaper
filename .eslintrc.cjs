@@ -2,8 +2,16 @@
 // eslint-disable-next-line no-undef
 module.exports = {
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
+  plugins: ['@typescript-eslint', 'simple-import-sort'],
   rules: {
+    'simple-import-sort/imports': ['error', {
+      groups: [
+        [''],
+        ['^(@shared).*(infra|infrastructure)', '^(@modules).*(infra|infrastructure)', '(infra|infrastructure)'],
+        ['^(@shared).*(app)', '^(@modules).*(app)', 'app'],
+        ['^(@shared).*(domain)', '^(@modules).*(domain)', 'domain'],
+      ],
+    }],
     'key-spacing': ['error', { 'beforeColon': false }],
     'block-spacing': 'error',
     'arrow-spacing': 'error',

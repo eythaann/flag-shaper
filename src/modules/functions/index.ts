@@ -1,4 +1,4 @@
-import { AnyFunction } from 'readable-types';
+import { AnyFunction, NonUndefined, ValueOf } from 'readable-types';
 import { FlagShaperChecker } from '../checker/index';
 import { AllowedFlags, IConfig } from '../shared/domain/interfaces';
 
@@ -30,5 +30,9 @@ export class FlagShaperForFunctions<Flag extends AllowedFlags, Config extends IC
     };
   }
 
-  public decorator() {}
+  public selectFnByFlag<T extends { [K in Flag]?: AnyFunction } & { 'default': AnyFunction }>(x: T): NonUndefined<ValueOf<T>>;
+
+  public selectFnByFlag() {
+    return;
+  }
 }

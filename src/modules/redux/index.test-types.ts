@@ -1,4 +1,7 @@
+import { FlagsToTest } from '../../tests/shared/common';
+import { DefaultConfig } from '../shared/domain/constants';
 import { ExtractByFlags, ModifyUsingInterface } from './app';
+import { ReduxFlagShaper } from './infra';
 
 interface OldITestDeep {
   testDeep1: number;
@@ -7,8 +10,8 @@ interface OldITestDeep {
 }
 
 type ITestDeep = ModifyUsingInterface<OldITestDeep, [
-  ['featureA', { testDeep1: string }],
-  ['featureC', { addedInC: boolean[] }]
+  [FlagsToTest.flagA, { testDeep1: string }],
+  [FlagsToTest.flagC, { addedInC: boolean[] }]
 ]>;
 
 interface OldIProp4 {
@@ -19,8 +22,8 @@ interface OldIProp4 {
 }
 
 type IProp4 = ModifyUsingInterface<OldIProp4, [
-  ['featureA', { test1: string }],
-  ['featureB', { test2: number }]
+  [FlagsToTest.flagA, { test1: string }],
+  [FlagsToTest.flagB, { test2: number }]
 ]>;
 
 interface OldReduxState {
@@ -31,15 +34,15 @@ interface OldReduxState {
 }
 
 export type ReduxStateType = ModifyUsingInterface<OldReduxState, [
-  ['featureA', { prop3: number[] }],
-  ['featureB', { prop3: boolean[] }]
+  [FlagsToTest.flagA, { prop3: number[] }],
+  [FlagsToTest.flagB, { prop3: boolean[] }]
 ]>;
 
-const ReduxState = {} as ReduxStateType;
+export const ReduxState = {} as ReduxStateType;
 
-const ReduxStateFC = {} as ExtractByFlags<ReduxStateType, ['featureC']>;
+const ReduxStateFC = {} as ExtractByFlags<ReduxStateType, [FlagsToTest.flagC]>;
 
-const ReduxStateFA: ExtractByFlags<ReduxStateType, ['featureA']> = {
+const ReduxStateFA: ExtractByFlags<ReduxStateType, [FlagsToTest.flagA]> = {
   prop1: [String()],
   prop2: [String()],
   prop3: [Number()],
@@ -55,7 +58,11 @@ const ReduxStateFA: ExtractByFlags<ReduxStateType, ['featureA']> = {
   },
 };
 
-const selectorBuilder = new SelectorBuilder<ReduxStateType>();
+const FakeReduxFlagShaper = new ReduxFlagShaper<FlagsToTest, typeof DefaultConfig>((a: FlagsToTest) => {
+  return [FlagsToTest.flagA].includes(a);
+}, DefaultConfig);
+
+const selectorBuilder = new FakeReduxFlagShaper.SelectorBuilder<ReduxStateType>();
 
 const selectProp4 = selectorBuilder.createSelector('prop4');
 
@@ -77,3 +84,7 @@ const t3 = selectDeep(ReduxStateFC);
 
 const t4 = selectDeepAlternative(ReduxStateFA);
 //     ^?
+
+if (FakeReduxFlagShaper.isFlagEnabled(FlagsToTest.flagA)) {
+
+}

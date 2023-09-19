@@ -33,12 +33,3 @@ export class FlagShaperJSX<Flag extends AllowedFlags, Config extends IConfig> ex
     return () => null;
   }
 };
-
-export const FSConnectCreator = (connect: AnyFunction) => <
-  T extends FlaggedPropsAndState,
->(...args: [
-    mapStateToProps: (state: any, ownProps: T['ExternalProps']) => T['ReduxStateProps'],
-    mapDispatchToProps?: any,
-    mergeProps?: any,
-    options?: any
-]) => (component: JSXElementConstructor<T['completeProps']>) => connect(args)(component) as JSXElementConstructor<T['ExternalProps']>;

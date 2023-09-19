@@ -1,12 +1,14 @@
-import { AnyObject } from 'readable-types';
+import { AnyFunction } from 'readable-types';
 
 export type AllowedFlags = string;
 export type FlagChecker<Flag extends AllowedFlags> = (flag: Flag) => boolean; // TODO | (flag: Flag) => Promise<boolean>;
 
 export interface IConfig {
   readonly keyForOverwrites: string;
+  readonly createSliceFn: <_S, _R, _N>(...args: any[]) => any;
+  readonly connectFn: AnyFunction;
 }
 
-export interface Metadata<T = AnyObject> {
+export interface Metadata<T = unknown> {
   __metadata?: T;
 }

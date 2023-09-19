@@ -1,16 +1,16 @@
-import { AnyObject, IsStrictObject, IsUnknown, IteratorHKT, KeyOfObject, KeysOfUnion, Modify, ModifyByKeyPlusOrderedCombinations, Prettify, TupleReduceHTK } from 'readable-types';
+import { AnyObject, IsStrictObject, IsUnknown, IteratorHKT, NonUndefined, KeysOfUnion, Modify, ModifyByKeyPlusOrderedCombinations, Prettify, TupleReduceHKT, HasProperty } from 'readable-types';
 import { Metadata } from '../shared/domain/interfaces';
 
 export type ModifyUsingInterface<T, V, U = 'none'> = Modify<T, Metadata<{
   unique: U;
-  types: ModifyByKeyPlusOrderedCombinations<T, V> & {};
+  types: ModifyByKeyPlusOrderedCombinations<T, V, 'flagToUse'> & {};
 }>>;
 
 type __ExtractByFlags<
   T,
   Flags extends [string, ...string[]] | []
 > = {
-  [Key in keyof T as Key extends '__key' ? never : Key]: IsStrictObject<T[Key]> extends true
+  [Key in keyof T as Key extends 'flagToUse' ? never : Key]: IsStrictObject<T[Key]> extends true
     ? ExtractByFlags<T[Key], Flags>
     : T[Key]
 };
@@ -21,17 +21,17 @@ interface ReduceFlags<FlagsOnObject> extends IteratorHKT.Tuple {
 }
 
 export type _ExtractByFlags<
-  T extends Metadata<{ types: { __key?: unknown[] } }>,
+  T extends Metadata<{ types: { flagToUse?: unknown[] } }>,
   Flags extends [string, ...string[]] | [],
 
-  FilteredFlags = TupleReduceHTK<Flags, ReduceFlags< NonNullable<NonNullable<T['__metadata']>['types']['__key']>[number] > >,
+  FilteredFlags = TupleReduceHKT<Flags, ReduceFlags< NonUndefined<NonUndefined<T['__metadata']>['types']['flagToUse']>[number] > >,
 
-> = IsUnknown<T['__metadata']> extends true
+> = HasProperty<T, '__metadata'> extends false
   ? __ExtractByFlags<T, Flags>
   : Prettify<__ExtractByFlags<
-  Extract< NonNullable<T['__metadata']>['types'], FilteredFlags extends [] ? { __key?: undefined } : { __key: FilteredFlags } >,
+  Extract< NonUndefined<T['__metadata']>['types'], FilteredFlags extends [] ? { flagToUse?: undefined } : { flagToUse: FilteredFlags } >,
   Flags
-  >> & Metadata<T['__metadata']>;
+  >>;
 
 export type ExtractByFlags<
   Type extends AnyObject,
@@ -51,13 +51,28 @@ export type SelectorByFlag<State extends AnyObject, Path extends unknown[]> = (
       ? Metadata<State['__metadata']>
       : Required<Metadata<State['__metadata']>>
     : State
-  >(state: S) => TupleReduceHTK<Path, extractTypeFormPath<S>>
+  >(state: S) => TupleReduceHKT<Path, extractTypeFormPath<S>>
 ) & Metadata<Path>;
 
 export type getAllPosibleKeys<
   State,
-  Fn extends Metadata,
-  R = TupleReduceHTK<NonNullable<Fn['__metadata']>, extractTypeFormPath<State>>
-> = IsUnknown<_RT.ForceExtract<R, '__metadata'>> extends true
+  Fn extends Metadata<string[]>,
+  R = TupleReduceHKT<NonUndefined<Fn['__metadata']>, extractTypeFormPath<State>>
+> = HasProperty<R, '__metadata'> extends false
   ? keyof R
-  : Exclude<KeysOfUnion<_RT.ForceExtract<NonNullable<_RT.ForceExtract<R, '__metadata'>>, 'types'>>, '__key'>;
+  : Exclude<KeysOfUnion<_RT.ForceExtract<NonUndefined<_RT.ForceExtract<R, '__metadata'>>, 'types'>>, 'flagToUse'>;
+
+// -- -- -- -- -- --
+export type Concrete<T extends AnyObject> = Prettify<_Concrete<T>>;
+
+type _Concrete<
+  T extends Metadata<{ types: { flagToUse?: unknown[] } }>,
+> = HasProperty<T, '__metadata'> extends false
+  ? __ConcreteProperties<T>
+  : __ConcreteProperties<NonUndefined<T['__metadata']>['types']>;
+
+type __ConcreteProperties<T> = {
+  [Key in keyof T]: IsStrictObject<T[Key]> extends true
+    ? Concrete<T[Key]>
+    : T[Key]
+};

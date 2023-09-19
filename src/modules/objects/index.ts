@@ -1,8 +1,9 @@
-import { AnyObject, If, IsNever, IsUnknown, Modify, ModifyByKeyPlusOrderedCombinations, Prettify, UnionToIntersection, ValueOf } from 'readable-types';
+import { AnyObject, HasProperty, ModifyByKeyPlusOrderedCombinations } from 'readable-types';
 import { FlagShaperChecker } from '../checker/index';
-import { keyOf } from '../shared/app/utils';
+import { ExtractByFlags } from '../redux/app';
+import { ReduxMetadata } from '../redux/domain';
 import { AllowedFlags, IConfig, Metadata } from '../shared/domain/interfaces';
-import { customExtract } from './app';
+import { customExtractObj } from './app';
 
 export class FlagShaperForObjects<Flag extends AllowedFlags, Config extends IConfig> extends FlagShaperChecker<Flag, Config> {
   public overwriteOnDeclaration<
@@ -33,7 +34,12 @@ export class FlagShaperForObjects<Flag extends AllowedFlags, Config extends ICon
     return newObject;
   }
 
-  public wasObjectDeclaredWith<Obj extends { [x: string]: any }, Flags extends [Flag, ...Flag[]] | []>(obj: Obj, flags: Flags = [] as Flags): obj is customExtract<Obj, Flags, Config['keyForOverwrites']> {
+  public wasObjectDeclaredWith<
+    Obj extends { [_ in Config['keyForOverwrites']]?: AllowedFlags[] },
+    Flags extends [Flag, ...Flag[]] | [] = [],
+  >(obj: Obj, flags?: Flags): obj is customExtractObj<Obj, Flags, Config['keyForOverwrites']>;
+
+  public wasObjectDeclaredWith(obj: AnyObject, flags: Flag[] = []): boolean {
     if (flags.length === 0) {
       return !obj[this.config.keyForOverwrites];
     }

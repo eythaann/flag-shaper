@@ -1,53 +1,51 @@
+import { createSlice as createSliceFn, PayloadAction } from '@reduxjs/toolkit';
 import { Component } from 'react';
-import { connect } from 'react-redux';
-import { Cast, If, IsUndefined, IsUnknown, IteratorHKT, Modify, ModifyByKeyPlusOrderedCombinations, Or, TupleIncludes, TupleReduceHTK } from 'readable-types';
+import { connect as connectFn } from 'react-redux';
+import { AnyObject, Cast, If, IsUndefined, IsUnknown, IteratorHKT, Modify, ModifyByKeyPlusOrderedCombinations, NonUndefined, Or, TupleIncludes, TupleReduceHKT } from 'readable-types';
 import { FlagShaper } from './modules';
-import { ConfigToConnect, FSConnectCreator } from './modules/jsx';
-import { ReduxState, selectTest1, selectTest2 } from './modules/redux/index.test-types';
+import { ConfigToConnect } from './modules/jsx';
+import { ReduxState, ReduxStateType } from './modules/redux/index.test-types';
+import { FlagsToTest } from './tests/shared/common';
 
-enum Features {
-  feature1 = 'feature1',
-  feature2 = 'feature2',
-  feature3 = 'feature3',
-}
+const EnabledFeatures: FlagsToTest[] = [FlagsToTest.flagA];
 
-const CustomConnect = FSConnectCreator(connect);
-
-const EnabledFeatures: Features[] = [Features.feature1];
-
-const FlagByEnv = new FlagShaper((feature: Features) => {
+const Flagger = new FlagShaper((feature: FlagsToTest) => {
   return EnabledFeatures.includes(feature);
-}, { keyForOverwrites: 'flagToUse' });
+}, {
+  keyForOverwrites: 'flagToUse',
+  createSliceFn: createSliceFn,
+  connectFn: connectFn,
+});
 
-const sum = FlagByEnv.fn.callableIn(Features.feature1, (a: number, b: number) => {
+const sum = Flagger.fn.callableIn(FlagsToTest.flagA, (a: number, b: number) => {
   return a + b;
 });
 console.log(sum(1, 3));
 
-const sum2 = FlagByEnv.fn.executableIn(Features.feature3, (a: number, b: number) => {
+const sum2 = Flagger.fn.executableIn(FlagsToTest.flagA, (a: number, b: number) => {
   return a + b;
 });
 console.log(sum2(1, 4));
 
-const testObj = FlagByEnv.obj.overwriteOnDeclaration({
+const testObj = Flagger.obj.overwriteOnDeclaration({
   prop1: 'test',
   prop2: 'test',
 }, [
-  [Features.feature1, {
+  [FlagsToTest.flagA, {
     prop3: 'new',
   }],
-  [Features.feature2, {
+  [FlagsToTest.flagB, {
     prop4: 'new',
     prop1: 'overridedIn2',
   }],
-  [Features.feature3, {
+  [FlagsToTest.flagC, {
     prop5: 'new',
     prop1: 123,
   }],
 ]);
 
 if (
-  FlagByEnv.obj.wasObjectDeclaredWith(testObj)
+  Flagger.obj.wasObjectDeclaredWith(testObj, [FlagsToTest.flagC])
 ) {
   testObj;
 }
@@ -61,11 +59,11 @@ interface testR2<KeyToFilter> extends IteratorHKT.Tuple<[string, {}]> {
     : this['acc'];
 }
 
-interface testR1 extends IteratorHKT.Tuple<[string, {}]> {
+interface testR1 extends IteratorHKT.Tuple<[string, {}], [string, AnyObject][]> {
   initialAcc: [];
   return: TupleIncludes<this['acc'], this['current']> extends true
     ? this['acc']
-    : _RT.Array.forceConcat<this['acc'], [[this['current'][0], TupleReduceHTK<this['tuple'], testR2<this['current'][0]>>]]>;
+    : [...this['acc'], [this['current'][0], TupleReduceHKT<this['tuple'], testR2<this['current'][0]>>]];
 }
 
 type DefaultValue<T, Default> = If<Or<[IsUnknown<T>, IsUndefined<T>]>, Default, T>;
@@ -76,14 +74,14 @@ interface MagnifigThing<T extends ConfigToConnect, Key extends string> {
     keyToOverwrites: 'statePropsOverwrites';
   };
 
-  ExternalProps: ModifyByKeyPlusOrderedCombinations<T['props'], T['propsOverwrites'], Key> & {};
-  InternalState: ModifyByKeyPlusOrderedCombinations<T['internalState'], T['internalStateOverwrites'], Key>;
-  ReduxStateProps: ModifyByKeyPlusOrderedCombinations<T['stateProps'], T['statePropsOverwrites'], Key> & {};
-  ReduxDispatchProps: ModifyByKeyPlusOrderedCombinations<T['dispatchProps'], T['dispatchPropsOverwrites'], Key>;
+  ExternalProps: ModifyByKeyPlusOrderedCombinations<T['props'], NonUndefined<T['propsOverwrites']>, Key> & {};
+  InternalState: ModifyByKeyPlusOrderedCombinations<T['internalState'], NonUndefined<T['internalStateOverwrites']>, Key>;
+  ReduxStateProps: ModifyByKeyPlusOrderedCombinations<T['stateProps'], NonUndefined<T['statePropsOverwrites']>, Key> & {};
+  ReduxDispatchProps: ModifyByKeyPlusOrderedCombinations<T['dispatchProps'], NonUndefined<T['dispatchPropsOverwrites']>, Key>;
 
   completeProps: ModifyByKeyPlusOrderedCombinations<
   Modify<Modify<T['props'], T['stateProps']>, T['dispatchProps']>,
-  TupleReduceHTK<[
+  TupleReduceHKT<[
     ...Cast<DefaultValue<T['propsOverwrites'], []>, any[]>,
     ...Cast<DefaultValue<T['statePropsOverwrites'], []>, any[]>,
     ...Cast<DefaultValue<T['dispatchPropsOverwrites'], []>, any[]>,
@@ -110,13 +108,13 @@ interface IMapStateToProps {
 interface testjsx {
   props: IProps;
   propsOverwrites: [
-    [Features.feature1, {
+    [FlagsToTest.flagA, {
       prop1: 'overrided';
       prop2: 'overrided';
       prop3: 'overrided';
       prop_for_1: 'newProp';
     }],
-    [Features.feature2, {
+    [FlagsToTest.flagB, {
       prop1: 'overridedIn2';
       prop2: 'overridedIn2';
       prop3: 'overridedIn2';
@@ -126,12 +124,12 @@ interface testjsx {
 
   internalState: IState;
   internalStateOverwrites: [
-    [Features.feature1, {
+    [FlagsToTest.flagA, {
       state1: string;
       state2: string;
       state_for_1: string;
     }],
-    [Features.feature2, {
+    [FlagsToTest.flagB, {
       state1: string;
       state2: string;
       state_for_2: string;
@@ -140,7 +138,7 @@ interface testjsx {
 
   stateProps: IMapStateToProps;
   statePropsOverwrites: [
-    [Features.feature2, {
+    [FlagsToTest.flagB, {
       stateToProp1: string[];
       stateToProp2: string;
     }],
@@ -152,16 +150,16 @@ type ComponentStateAndProps = MagnifigThing<testjsx, 'flagToUse'>;
 const TestComponent = class TestClassComponent extends Component<ComponentStateAndProps['completeProps'], ComponentStateAndProps['InternalState']> {
   constructor(props: ComponentStateAndProps['completeProps']) {
     super(props);
-    this.state = FlagByEnv.obj.overwriteOnDeclaration({
+    this.state = Flagger.obj.overwriteOnDeclaration({
       state1: '1',
       state2: '2',
     }, [
-      [Features.feature1, {
+      [FlagsToTest.flagA, {
         state1: 'overrided',
         state2: 'overrided',
         state_for_1: 'newProp',
       }],
-      [Features.feature2, {
+      [FlagsToTest.flagB, {
         state1: 'overridedIn2',
         state2: 'overridedIn2',
         state_for_2: 'newProp',
@@ -170,15 +168,25 @@ const TestComponent = class TestClassComponent extends Component<ComponentStateA
   }
 
   render() {
-    if (FlagByEnv.obj.wasObjectDeclaredWith(this.props, [Features.feature2])) {
+    let a = this.props;
+
+    a = {
+      'flagToUse': [FlagsToTest.flagA],
+      'prop1': '1',
+      'prop2': 1,
+      'prop3': null,
+      'stateToProp1': 123,
+    };
+
+    if (Flagger.obj.wasObjectDeclaredWith(this.props, [FlagsToTest.flagB])) {
       this.props.flagToUse;
     }
 
-    if (FlagByEnv.obj.wasObjectDeclaredWith(this.props, [Features.feature2, Features.feature1])) {
+    if (Flagger.obj.wasObjectDeclaredWith(this.props, [FlagsToTest.flagB, FlagsToTest.flagA])) {
       this.props.flagToUse;
     }
 
-    if (FlagByEnv.obj.wasObjectDeclaredWith(this.state, [Features.feature1])) {
+    if (Flagger.obj.wasObjectDeclaredWith(this.state, [FlagsToTest.flagA])) {
       this.state.flagToUse;
     }
 
@@ -186,17 +194,72 @@ const TestComponent = class TestClassComponent extends Component<ComponentStateA
   }
 };
 
-const test = selectTest1({} as ReduxState);
+const test = selectTest1({} as ReduxStateType);
 
-const mapStateToProps = (state: ReduxState, ownProps: ComponentStateAndProps['ExternalProps']) => {
-  return FlagByEnv.obj.overwriteOnDeclaration<ComponentStateAndProps>({
+const mapStateToProps = (state: ReduxStateType, ownProps: ComponentStateAndProps['ExternalProps']) => {
+  return Flagger.obj.overwriteOnDeclaration<ComponentStateAndProps>({
     stateToProp1: selectTest1(state),
   }, [
-    [Features.feature2, {
+    [FlagsToTest.flagB, {
       stateToProp1: selectTest1<['featureA']>(state),
       stateToProp2: selectTest2(state),
     }],
   ]);
 };
 
-const P = CustomConnect<ComponentStateAndProps>(mapStateToProps)(TestComponent);
+const _P = Flagger.redux.connect<ComponentStateAndProps>(mapStateToProps)(TestComponent);
+
+const { createSlice, reducerByFlag } = Flagger.redux.getSliceTools<ReduxStateType>();
+
+const _slice = createSlice({
+  name: 'test',
+  initialState: ReduxState,
+  reducers: {
+    'setAddedInC': reducerByFlag(FlagsToTest.flagC, (state, action: PayloadAction<{ test: '123' }>) => {
+      action.payload.test;
+      state.prop4.test4.addedInC = [true, false, true, false];
+    }),
+
+    'setAddedInCAndProp3': reducerByFlag([FlagsToTest.flagA, FlagsToTest.flagC], (state) => {
+      state.prop4.test4.addedInC = [true, false, true, false];
+      state.prop3 = [1, 2, 3];
+    }),
+
+    'setProp3': reducerByFlag({
+      default: (state) => {
+        state.prop3 = ['1', '2', '3'];
+      },
+      [FlagsToTest.flagA]: (state) => {
+        state.prop3 = [1, 2, 3];
+      },
+    }),
+  },
+});
+
+const _sliceOld = createSliceFn({
+  name: 'test',
+  initialState: ReduxState as any,
+  reducers: {
+    'setAddedInC': reducerByFlag(FlagsToTest.flagC, (state, action: PayloadAction<{ test: '123' }>) => {
+      action.payload.test;
+      state.prop4.test4.addedInC = [true, false, true, false];
+    }),
+
+    'setAddedInCAndProp3': reducerByFlag([FlagsToTest.flagA, FlagsToTest.flagC], (state) => {
+      state.prop4.test4.addedInC = [true, false, true, false];
+      state.prop3 = [1, 2, 3];
+    }),
+
+    'setProp3': reducerByFlag({
+      default: (state) => {
+        state.prop3 = ['1', '2', '3'];
+      },
+      [FlagsToTest.flagA]: (state) => {
+        state.prop3 = [1, 2, 3];
+      },
+    }),
+  },
+});
+
+_sliceOld.actions.setAddedInC;
+_slice.actions.setAddedInC;

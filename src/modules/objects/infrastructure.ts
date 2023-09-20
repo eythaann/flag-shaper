@@ -1,32 +1,61 @@
-import { AnyObject, ModifyByKeyPlusOrderedCombinations } from 'readable-types';
+import { AnyObject, IsFunction, IteratorHKT, ModifyByKeyPlusOrderedCombinations, NonUndefined, TupleMapHKT } from 'readable-types';
 
 import { BaseFlagger } from '@shared/BaseFlagger/app';
-import { customExtractObj } from './app';
+import { customExtract } from './app';
 
 import { AllowedFlags, IConfig, Metadata } from '@shared/domain/interfaces';
+import { ConfigToConnect } from '@modules/jsx/domain';
+import { NoInfer } from '@modules/redux/SliceTools/domain';
+
+interface FnToObj extends IteratorHKT.Tuple<[string, AnyObject]> {
+  return: [this['current'][0], IsFunction<this['current'][1]> extends true ? ReturnType<this['current'][1]> : this['current'][1]];
+}
+type OverFnToOverObj<T extends unknown[]> = TupleMapHKT<T, FnToObj>;
+
+interface ObjUnionFn extends IteratorHKT.Tuple<[string, AnyObject]> {
+  return: [this['current'][0], this['current'][1] | (() => this['current'][1])];
+}
+
+type OverObjUnionFn<T extends unknown[]> = TupleMapHKT<T, ObjUnionFn>;
 
 export class FlagShaperForObjects<Flag extends AllowedFlags, Config extends IConfig> extends BaseFlagger<Flag, Config> {
+  /*  public overwriteOnDeclaration<
+    objWithMeta extends Metadata<ConfigToConnect>,
+    _Case extends 'state',
+    Obj = NonUndefined<NonUndefined<objWithMeta['__metadata']>['stateProps']>,
+    Over = NonUndefined<NonUndefined<objWithMeta['__metadata']>['statePropsOverwrites']>,
+  >(
+    obj: Obj,
+    overrides: OverObjUnionFn<Over>
+  ): ModifyByKeyPlusOrderedCombinations<Obj, Over, Config['keyForOverwrites']>;
+
+  public overwriteOnDeclaration<
+    objWithMeta extends Metadata<ConfigToConnect>,
+    _Case extends 'dispatch',
+    Obj = NonUndefined<NonUndefined<objWithMeta['__metadata']>['dispatchProps']>,
+    Over = NonUndefined<NonUndefined<objWithMeta['__metadata']>['dispatchPropsOverwrites']>,
+  >(
+    obj: Obj,
+    overrides: OverObjUnionFn<Over>
+  ): ModifyByKeyPlusOrderedCombinations<Obj, Over, Config['keyForOverwrites']>; */
+
   public overwriteOnDeclaration<
     Obj extends AnyObject,
     Over extends [[Flag, AnyObject], ...[Flag, AnyObject][]]
-  >(obj: Obj, overrides: Over): ModifyByKeyPlusOrderedCombinations<Obj, Over, Config['keyForOverwrites']> & {};
+  >(obj: Obj, overrides: Over): ModifyByKeyPlusOrderedCombinations<Obj, OverFnToOverObj<Over>, Config['keyForOverwrites']>;
 
-  public overwriteOnDeclaration<
-    objWithMetadata extends Metadata<{ keyToMainObj: string; keyToOverwrites: string }>,
-    _metadata extends objWithMetadata['__metadata'] = objWithMetadata['__metadata'],
-    Obj = _RT.ForceExtract<_metadata, _metadata['keyToMainObj']>,
-    Over = _RT.ForceExtract<_metadata, _metadata['keyToOverwrites']>,
-  >(obj: Obj, overrides: Over): ModifyByKeyPlusOrderedCombinations<Obj, Over, Config['keyForOverwrites']> & {};
-
+  // TODO IMPLEMENTS ALL OVERLOADS
   public overwriteOnDeclaration(obj: any, overrides: any): any {
-    const newObject: any = obj;
+    const newObject = obj;
 
     overrides.forEach(([flag, override]: [Flag, AnyObject]) => {
-      if (!this.checker.isFlagEnabled(flag)) {
+      if (!this.validator.isFlagEnabled(flag)) {
         return;
       }
 
-      Object.assign(newObject, override);
+      const overObject = typeof override === 'function' ? override() : override;
+
+      Object.assign(newObject, overObject);
       newObject[this.config.keyForOverwrites] ??= [];
       newObject[this.config.keyForOverwrites].push(flag);
     });
@@ -34,10 +63,12 @@ export class FlagShaperForObjects<Flag extends AllowedFlags, Config extends ICon
     return newObject;
   }
 
+  // ========================================
+
   public wasObjectDeclaredWith<
     Obj extends { [_ in Config['keyForOverwrites']]?: AllowedFlags[] },
     Flags extends [Flag, ...Flag[]] | [] = [],
-  >(obj: Obj, flags?: Flags): obj is customExtractObj<Obj, Flags, Config['keyForOverwrites']>;
+  >(obj: Obj, flags?: Flags): obj is customExtract<Obj, Flags, Config['keyForOverwrites']>;
 
   public wasObjectDeclaredWith(obj: AnyObject, flags: Flag[] = []): boolean {
     if (flags.length === 0) {
@@ -45,6 +76,8 @@ export class FlagShaperForObjects<Flag extends AllowedFlags, Config extends ICon
     }
     return obj[this.config.keyForOverwrites] && flags.every((flag) => obj[this.config.keyForOverwrites].includes(flag));
   }
+
+  // ========================================
 
   public setOverridesToObject<
     Obj extends AnyObject,

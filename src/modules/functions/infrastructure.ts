@@ -11,7 +11,7 @@ export class FlagShaperForFunctions<Flag extends AllowedFlags, Config extends IC
    */
   public executableIn<T extends AnyFunction>(flag: Flag | Flag[], fn: T) {
     return (...args: Parameters<T>): ReturnType<T> | undefined => {
-      if (!this.checker.isFlagEnabled(flag)) {
+      if (!this.validator.allFlagsAreEnabled(flag)) {
         return;
       }
       return fn(...args);
@@ -25,7 +25,7 @@ export class FlagShaperForFunctions<Flag extends AllowedFlags, Config extends IC
    */
   public callableIn<T extends AnyFunction>(flag: Flag | Flag[], fn: T) {
     return (...args: Parameters<T>): ReturnType<T> => {
-      if (!this.checker.someFlagIsEnabled(flag)) {
+      if (!this.validator.allFlagsAreEnabled(flag)) {
         throw new Error(`${fn.name || 'anonymous'} fn() not is callable if flag not is enabled`);
       }
       return fn(...args);

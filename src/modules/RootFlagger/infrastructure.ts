@@ -1,6 +1,6 @@
 
 import { FlagShaperForFunctions } from '@modules/functions/infrastructure';
-import { FlagShaperChecker } from '../checker/infrastructure';
+import { FlagValidator } from '../checker/infrastructure';
 import { FlagShaperDecorators } from '../decorators/infrastructure';
 import { FlagShaperJSX } from '../jsx/infrastructure';
 import { FlagShaperForObjects } from '../objects/infrastructure';
@@ -15,7 +15,7 @@ export class FlagShaper<
   Flag extends AllowedFlags = string,
   Config extends IConfig = typeof DefaultConfig,
 > extends BaseFlagger<Flag, Config> {
-  public readonly checker: FlagShaperChecker<Flag>;
+  public readonly validator: FlagValidator<Flag>;
   public readonly config: Config;
 
   /** @alias function */
@@ -37,9 +37,9 @@ export class FlagShaper<
   public readonly jsx: FlagShaperJSX<Flag, Config>;
 
   public constructor(isFlagEnabled: FlagCheckerFn<Flag>, config: Readonly<Config> = DefaultConfig as Config) {
-    super(new FlagShaperChecker(isFlagEnabled), config);
+    super(new FlagValidator(isFlagEnabled), config);
 
-    const args = [this.checker, this.config] as const;
+    const args = [this.validator, this.config] as const;
 
     this.function = new FlagShaperForFunctions(...args);
     this.object = new FlagShaperForObjects(...args);

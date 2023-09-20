@@ -1,6 +1,6 @@
 import { AllowedFlags, FlagCheckerFn } from '@shared/domain/interfaces';
 
-export class FlagShaperChecker<Flag extends AllowedFlags> {
+export class FlagValidator<Flag extends AllowedFlags> {
   private readonly _isFlagEnabled: FlagCheckerFn<Flag>;
 
   public constructor(isFlagEnabled: FlagCheckerFn<Flag>) {

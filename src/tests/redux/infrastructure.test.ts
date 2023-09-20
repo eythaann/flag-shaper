@@ -2,11 +2,11 @@ import { FlagsToTest } from '../shared/common';
 import { IProp4, ITest4, MocketState, ReduxState } from './mockets';
 import { Modify } from 'readable-types';
 
-import { FlagShaperChecker } from '@modules/checker/infrastructure';
-import { ReduxFlagShaper } from '@modules/redux/infrastructure';
+import { FlagValidator } from '@modules/checker/infrastructure';
+import { ReduxFlagShaper } from '@modules/redux/Flagger/infrastructure';
 
 import { cloneDeep } from '@shared/app/utils';
-import { ExtractByFlags, ModifyUsingInterface } from '@modules/redux/app';
+import { ExtractByFlags, OverwriteByFlag } from '@modules/redux/Flagger/app';
 
 import { DefaultConfig } from '@shared/domain/constants';
 import { IConfig } from '@shared/domain/interfaces';
@@ -16,7 +16,7 @@ class ReduxFlagShaperForTest<Config extends IConfig> extends ReduxFlagShaper<Fla
 }
 
 type FakeReduxFlagShaper = typeof FakeReduxFlagShaper;
-const FakeReduxFlagShaper = new ReduxFlagShaperForTest(new FlagShaperChecker((a: FlagsToTest) => {
+const FakeReduxFlagShaper = new ReduxFlagShaperForTest(new FlagValidator((a: FlagsToTest) => {
   return [FlagsToTest.flagA].includes(a);
 }), DefaultConfig);
 
@@ -45,7 +45,7 @@ describe('ReduxFlagShaper', () => {
     });
 
     it('Should allow mix states', () => {
-      type State = Modify<ReduxState, { prop4: Modify<IProp4, { test4: ModifyUsingInterface<FakeReduxFlagShaper, ITest4, [
+      type State = Modify<ReduxState, { prop4: Modify<IProp4, { test4: OverwriteByFlag<FakeReduxFlagShaper, ITest4, [
         [FlagsToTest.flagA, {
           addedInA: 'eythanWasHere';
         }]

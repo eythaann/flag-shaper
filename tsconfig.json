@@ -3,6 +3,7 @@
     "lib": ["ESNext", "DOM"],
     "moduleResolution": "Node",
     "target": "ES2016",
+    
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "strictNullChecks": true,
@@ -11,8 +12,11 @@
     "noUncheckedIndexedAccess": true,
     "noFallthroughCasesInSwitch": true,
     "noEmit": true,
-    "jsx": "react",
     "noErrorTruncation": true,
+
+    "jsx": "react",
+    "allowSyntheticDefaultImports": true,
+
     "baseUrl": "./src",
     "paths": {
       "@shared/*": ["./modules/shared/*"],

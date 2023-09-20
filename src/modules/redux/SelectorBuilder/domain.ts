@@ -16,7 +16,7 @@ type SelectorByFlag<State extends AnyObject, Path extends unknown[]> = (
   >(state: S) => TupleReduceHKT<Path, extractTypeFormPath<S>>
 ) & Metadata<Path>;
 
-type getAllPosibleKeys<
+export type getAllPosibleKeys<
   State,
   Fn extends Metadata<string[]>,
   R = TupleReduceHKT<NonUndefined<Fn['__metadata']>, extractTypeFormPath<State>>

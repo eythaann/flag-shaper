@@ -33,7 +33,12 @@ module.exports = {
       'named': 'never',
       'asyncArrow': 'always',
     }],
-    '@typescript-eslint/no-unused-vars': ['warn', { 'varsIgnorePattern': '^_' }],
+    '@typescript-eslint/no-unused-vars': ['warn', {
+      'varsIgnorePattern': '^_',
+      'argsIgnorePattern': '^_',
+      'destructuredArrayIgnorePattern': '^_',
+      'destructuredArrayIgnorePattern': '^_',
+    }],
     'quotes': ['error', 'single'],
     'semi': 'off',
     'no-multi-spaces': ['error'],

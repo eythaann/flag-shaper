@@ -1,33 +1,47 @@
 import { AnyFunction, AnyObject } from 'readable-types';
 
-import { FlagShaperChecker } from '@modules/checker/infra';
+import { FlagValidator } from '@modules/checker/infrastructure';
 
+import { AllowedFlags, IConfig } from '@shared/domain/interfaces';
 import { ISliceTools } from './domain';
-import { AllowedFlags } from '@shared/domain/interfaces';
 
-class SliceTools<State extends AnyObject, Flag extends AllowedFlags> implements ISliceTools<State, Flag> {
-  constructor(private createSliceFn: AnyFunction, private checker: FlagShaperChecker<Flag>) {}
+export const createSliceTools = <State extends AnyObject, Flag extends AllowedFlags, Config extends IConfig>(
+  createSliceFn: AnyFunction,
+  validator: FlagValidator<Flag>,
+): ISliceTools<State, Flag, Config> => {
+  return new class {
+    public createSlice(opt: any) {
+      return createSliceFn(opt);
+    };
 
-  public createSlice(opt: any) {
-    return this.createSliceFn(opt);
-  };
+    private getReducer(x: AnyObject): AnyFunction | void {
+      for (const flag of Object.keys(x).reverse()) {
+        if (flag !== 'default' && !validator.isFlagEnabled(flag as Flag)) {
+          continue;
+        }
 
-  public reducerByFlag(x: any, reducer?: any): any {
-    if (typeof x === 'object' && !Array.isArray(x)) {
-      return; // todo implemente case 3
+        const reducerByFlag = x[flag];
+        if (typeof reducerByFlag === 'function') {
+          return reducerByFlag;
+        };
+
+        return this.getReducer(reducerByFlag);
+      }
     }
 
-    return (...args: any[]) => {
-      if (this.checker.allFlagsAreEnabled(x)) {
-        return reducer!(...args);
+    public reducerByFlag(x: any, reducer?: any): any {
+      if (typeof x === 'object' && !Array.isArray(x)) {
+        return (...args: any[]) => {
+          const reducer = this.getReducer(x);
+          return reducer?.(...args);
+        };
       }
-    };
-  }
-};
 
-export const createSliceTools = <State extends AnyObject, Flag extends string>(
-  createSliceFn: AnyFunction,
-  checker: FlagShaperChecker<Flag>,
-): ISliceTools<State, Flag> => {
-  return new SliceTools<State, Flag>(createSliceFn, checker);
+      return (...args: any[]) => {
+        if (validator.allFlagsAreEnabled(x)) {
+          return reducer!(...args);
+        }
+      };
+    }
+  };
 };

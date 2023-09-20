@@ -2,8 +2,9 @@ import { FlagsToTest } from '../shared/common';
 import { IProp4, ITest4, ITestDeep4, ReduxState } from './mockets';
 import { Modify } from 'readable-types';
 
-import { getAllPosibleKeys, ModifyUsingInterface } from '../../modules/redux/Flagger/app';
+import { OverwriteByFlag } from '../../modules/redux/Flagger/app';
 
+import { getAllPosibleKeys } from '@modules/redux/SelectorBuilder/domain';
 import { Metadata } from '../../modules/shared/domain/interfaces';
 
 describe('getAllPosibleKeys', () => {
@@ -16,7 +17,7 @@ describe('getAllPosibleKeys', () => {
   });
 
   it('Should give me the keys of metadata on path', () => {
-    type State = Modify<ReduxState, { prop4: Modify<IProp4, { test4: Modify<ITest4, { testDeep4: ModifyUsingInterface<ITestDeep4, [
+    type State = Modify<ReduxState, { prop4: Modify<IProp4, { test4: Modify<ITest4, { testDeep4: OverwriteByFlag<ITestDeep4, [
       [FlagsToTest.flagA, {
         addedInA: 'eythanWasHere';
       }]

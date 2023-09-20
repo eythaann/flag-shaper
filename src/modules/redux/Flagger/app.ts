@@ -4,9 +4,9 @@ import {
   HasProperty,
   IsStrictObject,
   IteratorHKT,
-  Modify,
   ModifyByKeyPlusOrderedCombinations,
   NonUndefined,
+  Prettify,
   TupleReduceHKT,
 } from 'readable-types';
 
@@ -37,13 +37,13 @@ type _ExtractByFlags<
 
 > = HasProperty<T, '__metadata'> extends false
   ? __ExtractByFlags<T, Flags, KeyToDiscriminate>
-  : __ExtractByFlags<
+  : Prettify<__ExtractByFlags<
   Extract< NonUndefined<T['__metadata']>['types'], FilteredFlags extends []
     ? { [_ in KeyToDiscriminate]?: undefined }
     : { [_ in KeyToDiscriminate]: FilteredFlags } >,
   Flags,
   KeyToDiscriminate
-  > & Metadata<T['__metadata']>;
+  >> & Metadata<NonUndefined<T['__metadata']>>;
 
 /**
  *
@@ -67,14 +67,13 @@ export type ExtractByFlags<
  *
  *
  */
-export type ModifyUsingInterface<
+export type OverwriteByFlag<
   Flagger extends { config: IConfig },
   TypeBeforeFlags,
   Overwrittes extends TupleType<[NonUndefined<Flagger['config']['flags']>, AnyObject]>,
-> = Modify<TypeBeforeFlags, Metadata<{
-  unique: 'none';
-  types: ModifyByKeyPlusOrderedCombinations<TypeBeforeFlags, Overwrittes, Flagger['config']['keyForOverwrites']> & {};
-}>>;
+> = Prettify<TypeBeforeFlags> & Metadata<{
+  types: ModifyByKeyPlusOrderedCombinations<TypeBeforeFlags, Overwrittes, Flagger['config']['keyForOverwrites']>;
+}>;
 // ---
 
 // -- -- -- -- -- --

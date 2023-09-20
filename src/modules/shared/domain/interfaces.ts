@@ -7,7 +7,6 @@ export interface IConfig {
   readonly keyForOverwrites: string;
   readonly createSliceFn: <_S, _R, _N>(...args: any[]) => any;
   readonly connectFn: AnyFunction;
-  readonly flags?: string;
 }
 
 export interface Metadata<T = unknown> {

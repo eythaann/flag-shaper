@@ -3,7 +3,7 @@ import { ReduxStateType } from './state';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { FlagsToTest } from 'tests/shared/common';
 
-const { createSlice, reducerByFlag } = Shapper.redux.getSliceTools<ReduxStateType>();
+const { createSlice, reducerByFlag, reducerBuilder } = Shapper.redux.getSliceTools<ReduxStateType>();
 
 const state = {} as ReduxStateType;
 
@@ -21,21 +21,21 @@ const _slice = createSlice({
       state.prop3 = [1, 2, 3];
     }),
 
-    'setProp3': reducerByFlag({
-      default: (state, action: PayloadAction<string[]>) => {
+    'setProp3': reducerBuilder()
+      .setDefault((state, action: PayloadAction<string[]>) => {
         state.prop3 = action.payload;
-      },
-      [FlagsToTest.flagA]: {
-        default: (state, action: PayloadAction<number[]>) => {
-          state.prop3 = action.payload;
-        },
-        [FlagsToTest.flagC]: (state, action: PayloadAction<{ prop3: number[]; c: boolean[] }>) => {
-          state.prop4.test4.addedInC = action.payload.c;
-          state.prop3 = action.payload.prop3;
-        },
-      },
-    }),
+      })
+      .addCase(FlagsToTest.flagA, (state, action: PayloadAction<number[]>) => {
+        state.prop3 = action.payload;
+      })
+      .addCase([FlagsToTest.flagA, FlagsToTest.flagC], (state, action: PayloadAction<{ prop3: number[]; c: boolean[] }>) => {
+        state.prop4.test4.addedInC = action.payload.c;
+        state.prop3 = action.payload.prop3;
+      })
+      .build(),
   },
 });
 
 export const actions = _slice.actions;
+
+actions.setProp3;

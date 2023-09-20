@@ -180,6 +180,12 @@ export const A = (_props: ComponentStateAndProps['ExternalProps']) => {
     prop3="overridedIn2"
     prop_for_2="newProp"
   >
-
+    <div>
+      <div>
+        <div>
+          <span> WOWWWWWWWW </span>
+        </div>
+      </div>
+    </div>
   </TestFlaggedComponent>;
 };

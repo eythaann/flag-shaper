@@ -2,7 +2,7 @@ import type { JSXElementConstructor, ReactNode } from 'react';
 import { AnyObject, Prettify } from 'readable-types';
 
 import { createSelectorBuilder } from '../SelectorBuilder/infrastructure';
-import { createSliceTools } from '../SliceTools/infrastructure';
+import { SliceTools } from '../SliceTools/infrastructure';
 
 import { BaseFlagger } from 'modules/shared/BaseFlagger/app';
 
@@ -15,7 +15,7 @@ export class ReduxFlagShaper<Flag extends AllowedFlags, Config extends IConfig> 
   };
 
   public getSliceTools<State extends AnyObject>() {
-    return createSliceTools<State, Flag, Config>(this.config.createSliceFn, this.validator);
+    return new SliceTools<State, Flag, Config>(this.validator, this.config);
   }
 
   public connect<

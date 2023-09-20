@@ -1,21 +1,17 @@
-import { ActionCreatorWithoutPayload, ActionReducerMapBuilder, CaseReducer, CaseReducerWithPrepare, PayloadAction, Slice, SliceCaseReducers, ValidateSliceCaseReducers } from '@reduxjs/toolkit';
-import { BaseActionCreator } from '@reduxjs/toolkit/dist/createAction';
-import { AnyObject, IsFunction, IsNever, IsStrictObject, Modify, NonUndefined, ValueOf } from 'readable-types';
+import { ActionCreatorWithoutPayload, ActionReducerMapBuilder, PayloadAction, Slice, SliceCaseReducers, ValidateSliceCaseReducers } from '@reduxjs/toolkit';
+import { _ActionCreatorWithPreparedPayload, BaseActionCreator } from '@reduxjs/toolkit/dist/createAction';
+import { AnyObject, IsNever, Modify } from 'readable-types';
 
-import { ExtractByFlags } from '../../RootFlagger/app';
+import { CaseReducerBuilder } from './ReducerBuilder/infrastructure';
+
+import { BaseFlagger } from 'modules/shared/BaseFlagger/app';
+import { reducerCallback } from './ReducerBuilder/app';
 
 import { AllowedFlags, IConfig } from 'modules/shared/domain/interfaces';
 
-type reducerCallback<
-  _state extends AnyObject,
-  keys extends [string, ...string[]] | [],
-  KeyToDiscriminate extends string,
-  State = ExtractByFlags<{ config: { keyForOverwrites: KeyToDiscriminate } }, _state, keys>
-> = CaseReducer<State, PayloadAction<any>> | CaseReducerWithPrepare<State, PayloadAction<any, string, any, any>>;
-
 export type NoInfer<T> = [T][T extends any ? 0 : never];
 
-type ReducersObject<
+/* type ReducersObject<
   State extends AnyObject,
   Flags extends string,
   AnidatedIn extends [string, ...string[]] | [],
@@ -27,15 +23,15 @@ type ReducersObject<
     ? never
     : reducerCallback<State, [...AnidatedIn, Flag], KeyToDiscriminate>
     | ReducersObject<State, Flags, [...AnidatedIn, Flag], KeyToDiscriminate>;
-};
+}; */
 
-type TestExtract<T, V = NonUndefined<ValueOf<T>>> = V extends infer A
+/* type TestExtract<T, V = NonUndefined<ValueOf<T>>> = V extends infer A
   ? IsFunction<A> extends true
     ? A
     : IsStrictObject<A> extends true
       ? TestExtract<A>
       : any
-  : any;
+  : any; */
 
 interface ActionCreatorWithPayload<Payload, Type extends string = string> extends BaseActionCreator<Payload, Type> {
   <T extends Payload>(payload: T): PayloadAction<T, Type>;
@@ -51,17 +47,23 @@ type ActionCreatorForCaseReducer<CR, Type extends string, P = GetAllPosiblePaylo
   ? ActionCreatorWithoutPayload<Type>
   : ActionCreatorWithPayload<P, Type>;
 
+type SliceActionType<SliceName extends string, ActionName extends keyof any> = ActionName extends string | number ? `${SliceName}/${ActionName}` : string;
+
+type ActionCreatorForCaseReducerWithPrepare<CR extends {
+  prepare: any;
+}, Type extends string> = _ActionCreatorWithPreparedPayload<CR['prepare'], Type>;
+
 type CaseReducerActions<CaseReducers extends SliceCaseReducers<any>, SliceName extends string> = {
-  [ActionName in keyof CaseReducers]: ActionCreatorForCaseReducer<
-  CaseReducers[ActionName],
-  ActionName extends string | number ? `${SliceName}/${ActionName}` : string
-  >
+  [ActionName in keyof CaseReducers]: CaseReducers[ActionName] extends {
+    prepare: any;
+  } ? ActionCreatorForCaseReducerWithPrepare<CaseReducers[ActionName], SliceActionType<SliceName, ActionName>>
+    : ActionCreatorForCaseReducer<CaseReducers[ActionName], SliceActionType<SliceName, ActionName>>
 };
 
-export interface ISliceTools<State extends AnyObject, Flag extends AllowedFlags, Config extends IConfig> {
-  createSlice<S, R extends SliceCaseReducers<any>, Name extends string>(opt: {
+export class SliceTools<State extends AnyObject, Flag extends AllowedFlags, Config extends IConfig> extends BaseFlagger<Flag, Config> {
+  createSlice<_S, R extends SliceCaseReducers<any>, Name extends string>(opt: {
     name: Name;
-    initialState: S | (() => S);
+    initialState: any | (() => any);
     reducers: ValidateSliceCaseReducers<any, R>;
     extraReducers?: (builder: ActionReducerMapBuilder<any>) => void;
   }): Modify<Slice<any, R, Name>, {
@@ -93,5 +95,7 @@ export interface ISliceTools<State extends AnyObject, Flag extends AllowedFlags,
    *    }
    * }
    */
-  reducerByFlag<T extends ReducersObject<State, Flag, [], Config['keyForOverwrites']>>(cases: T): TestExtract<T>;
-};
+  // reducerByFlag<T extends ReducersObject<State, Flag, [], Config['keyForOverwrites']>>(cases: T): TestExtract<T>;
+
+  reducerBuilder(): CaseReducerBuilder<State, Flag, Config>;
+}

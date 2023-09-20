@@ -1,6 +1,6 @@
 import { AnyFunction, AnyObject, HasProperty, IsUnknown, IteratorHKT, KeysOfUnion, NonUndefined, TupleReduceHKT } from 'readable-types';
 
-import { Metadata } from '@shared/domain/interfaces';
+import { Metadata } from 'modules/shared/domain/interfaces';
 
 interface extractTypeFormPath<state> extends IteratorHKT.Tuple {
   initialAcc: state;

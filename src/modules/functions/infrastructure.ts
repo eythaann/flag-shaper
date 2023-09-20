@@ -1,8 +1,8 @@
 import { AnyFunction, NonUndefined, ValueOf } from 'readable-types';
 
-import { BaseFlagger } from '@shared/BaseFlagger/app';
+import { BaseFlagger } from 'modules/shared/BaseFlagger/app';
 
-import { AllowedFlags, IConfig } from '@shared/domain/interfaces';
+import { AllowedFlags, IConfig } from 'modules/shared/domain/interfaces';
 
 export class FlagShaperForFunctions<Flag extends AllowedFlags, Config extends IConfig> extends BaseFlagger<Flag, Config> {
   /**
@@ -30,11 +30,5 @@ export class FlagShaperForFunctions<Flag extends AllowedFlags, Config extends IC
       }
       return fn(...args);
     };
-  }
-
-  public selectFnByFlag<T extends { [K in Flag]?: AnyFunction } & { 'default': AnyFunction }>(x: T): NonUndefined<ValueOf<T>>;
-
-  public selectFnByFlag() {
-    return;
   }
 }

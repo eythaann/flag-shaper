@@ -1,9 +1,13 @@
-import { actions, Flagger, ReduxStateType, selectAddedInC, selectTest1 } from './testing';
+import { Shapper } from './initFlagger';
+import { selectAddedInC, selectTest1 } from './selectors';
+import { actions } from './slice';
+import { ReduxStateType } from './state';
 import React, { Component, useState } from 'react';
-import { Prettify } from 'readable-types';
 import { FlagsToTest } from 'tests/shared/common';
 
-import { MagnifigThing } from '@modules/jsx/domain';
+import { on } from 'modules/helpers/app';
+
+import { MagnifigThing } from 'modules/jsx/domain';
 
 interface IProps {
   prop1: '1';
@@ -74,26 +78,27 @@ interface testjsx {
   ];
 }
 
-type ComponentStateAndProps = MagnifigThing<Flagger, testjsx>;
+type ComponentStateAndProps = MagnifigThing<Shapper, testjsx>;
 
 const TestComponent = class TestClassComponent extends Component<ComponentStateAndProps['completeProps'], ComponentStateAndProps['InternalState']> {
   constructor(props: ComponentStateAndProps['completeProps']) {
     super(props);
-    this.state = Flagger.obj.overwriteOnDeclaration({
-      state1: '1',
-      state2: '2',
-    }, [
-      [FlagsToTest.flagA, {
+    this.state = Shapper.obj.builder()
+      .setObjToOverwrite({
+        state1: '1',
+        state2: '2',
+      })
+      .addCase(FlagsToTest.flagA, {
         state1: 'overrided',
         state2: 'overrided',
         state_for_1: 'newProp',
-      }],
-      [FlagsToTest.flagB, {
+      })
+      .addCase(FlagsToTest.flagB, {
         state1: 'overridedIn2',
         state2: 'overridedIn2',
         state_for_2: 'newProp',
-      }],
-    ]);
+      })
+      .build();
   }
 
   render() {
@@ -103,15 +108,15 @@ const TestComponent = class TestClassComponent extends Component<ComponentStateA
 
     this.props.setProp3(['1', '2', '3']);
 
-    if (Flagger.obj.wasObjectDeclaredWith(this.props, [FlagsToTest.flagC])) {
+    if (Shapper.obj.wasObjectDeclaredWith(this.props, [FlagsToTest.flagC])) {
       this.props.setAddedInC({ test: '123' });
     }
     /*
-    if (Flagger.obj.wasObjectDeclaredWith(this.props, [FlagsToTest.flagB, FlagsToTest.flagA])) {
+    if (Shapper.obj.wasObjectDeclaredWith(this.props, [FlagsToTest.flagB, FlagsToTest.flagA])) {
       this.props.flagToUse;
     }
 
-    if (Flagger.obj.wasObjectDeclaredWith(this.state, [FlagsToTest.flagA])) {
+    if (Shapper.obj.wasObjectDeclaredWith(this.state, [FlagsToTest.flagA])) {
       this.state.flagToUse;
     } */
 
@@ -120,34 +125,38 @@ const TestComponent = class TestClassComponent extends Component<ComponentStateA
 };
 
 const mapStateToProps = (state: ReduxStateType, ownProps: ComponentStateAndProps['ExternalProps']): ComponentStateAndProps['ReduxStateProps'] => {
-  return Flagger.obj.overwriteOnDeclaration({
-    stateToProp1: selectTest1(state),
-  }, [
-    [FlagsToTest.flagB, {
+  //
+  // ...some code
+  //
+
+  return Shapper.obj.builder()
+    .setObjToOverwrite({
+      stateToProp1: selectTest1(state),
+    })
+    .addCase(FlagsToTest.flagB, {
       stateToProp1: ['123'],
       stateToProp2: '123',
-    }],
-    [FlagsToTest.flagC, () => {
-      const concreteState = Flagger.rx.concrete(state, [FlagsToTest.flagC]);
+    })
+    .addCase(FlagsToTest.flagC, () => {
+      const concreteState = Shapper.concrete(state, [FlagsToTest.flagC]);
 
       return {
         addedInC: selectAddedInC(concreteState),
       };
-    }],
-  ]);
+    })
+    .build();
 };
 
-const mapDispatchToProps = Flagger.obj.overwriteOnDeclaration({
-  setProp3: actions.setProp3,
-}, [
-  [FlagsToTest.flagC, {
+const mapDispatchToProps = Shapper.obj.builder()
+  .setObjToOverwrite({
+    setProp3: actions.setProp3,
+  })
+  .addCase(FlagsToTest.flagC, {
     setAddedInC: actions.setAddedInC,
-  }],
-]);
+  })
+  .build();
 
-type _AA = Prettify<ComponentStateAndProps['ReduxStateProps']>;
-
-const TestFlaggedComponent = Flagger.redux.connect<ComponentStateAndProps>(mapStateToProps, mapDispatchToProps)(TestComponent);
+const TestFlaggedComponent = Shapper.redux.connect<ComponentStateAndProps>(mapStateToProps, mapDispatchToProps)(TestComponent);
 
 // ==================================================
 // ==================================================
@@ -159,7 +168,10 @@ const TestFlaggedComponent = Flagger.redux.connect<ComponentStateAndProps>(mapSt
 // ==================================================
 
 export const A = (_props: ComponentStateAndProps['ExternalProps']) => {
-  const [state, setState] = useState<ComponentStateAndProps['InternalState']>();
+  const [state, setState] = useState(Shapper.getValueByFlag(0, [
+    on(FlagsToTest.flagA).use(5),
+    on(FlagsToTest.flagB).use(20),
+  ]));
 
   return <TestFlaggedComponent
     flagToUse={[FlagsToTest.flagB]}

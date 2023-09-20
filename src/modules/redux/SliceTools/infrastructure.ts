@@ -1,8 +1,8 @@
 import { AnyFunction, AnyObject } from 'readable-types';
 
-import { FlagValidator } from '@modules/checker/infrastructure';
+import { FlagValidator } from 'modules/checker/infrastructure';
 
-import { AllowedFlags, IConfig } from '@shared/domain/interfaces';
+import { AllowedFlags, IConfig } from 'modules/shared/domain/interfaces';
 import { ISliceTools } from './domain';
 
 export const createSliceTools = <State extends AnyObject, Flag extends AllowedFlags, Config extends IConfig>(

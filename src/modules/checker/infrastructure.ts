@@ -1,4 +1,4 @@
-import { AllowedFlags, FlagCheckerFn } from '@shared/domain/interfaces';
+import { AllowedFlags, FlagCheckerFn } from 'modules/shared/domain/interfaces';
 
 export class FlagValidator<Flag extends AllowedFlags> {
   private readonly _isFlagEnabled: FlagCheckerFn<Flag>;

@@ -2,9 +2,9 @@ import { FlagsToTest } from '../shared/common';
 import { IProp4, ITest4, ITestDeep4, ReduxState } from './mockets';
 import { Modify } from 'readable-types';
 
-import { OverwriteByFlag } from '../../modules/redux/Flagger/app';
+import { OverwriteByFlag } from '../../modules/RootFlagger/app';
 
-import { getAllPosibleKeys } from '@modules/redux/SelectorBuilder/domain';
+import { getAllPosibleKeys } from 'modules/redux/SelectorBuilder/domain';
 import { Metadata } from '../../modules/shared/domain/interfaces';
 
 describe('getAllPosibleKeys', () => {

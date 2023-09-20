@@ -1,6 +1,6 @@
 import { AnyObject, If, IsUndefined, IsUnknown, IteratorHKT, Modify, ModifyByKeyPlusOrderedCombinations, NonUndefined, Or, TupleIncludes, TupleReduceHKT } from 'readable-types';
 
-import { IConfig, Metadata } from '@shared/domain/interfaces';
+import { IConfig, Metadata } from 'modules/shared/domain/interfaces';
 
 export interface ConfigToConnect {
   props?: AnyObject;
@@ -38,9 +38,9 @@ interface testR1 extends IteratorHKT.Tuple<[string, AnyObject], [string, AnyObje
 type DefaultValue<T, Default> = If<Or<[IsUnknown<T>, IsUndefined<T>]>, Default, T>;
 
 export interface MagnifigThing<
-  Flagger extends { config: IConfig },
+  Shapper extends { config: IConfig },
   T extends ConfigToConnect,
-  Key extends string = Flagger['config']['keyForOverwrites']
+  Key extends string = Shapper['config']['keyForOverwrites']
 > {
   __metadata: T;
 

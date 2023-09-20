@@ -1,8 +1,8 @@
-import { Flagger } from './initFlagger';
+import { Shapper } from './initFlagger';
 import { ReduxStateType, selectorBuilder } from './state';
 import { FlagsToTest } from 'tests/shared/common';
 
-import { ExtractByFlags } from '@modules/redux/Flagger/app';
+import { ExtractByFlags } from 'modules/RootFlagger/app';
 
 const selectProp4 = selectorBuilder.createSelector('prop4');
 
@@ -13,8 +13,8 @@ export const selectAddedInC = selectorBuilder.createSelectorFrom(selectTest4, 'a
 
 const selectDeepAlternative = selectorBuilder.createSelector(['prop4', 'test4', 'testDeep1']);
 
-const utilForFlagC = Flagger.fn.executableIn(FlagsToTest.flagC, (state: ReduxStateType) => {
-  const concreteState = Flagger.rx.concrete(state, FlagsToTest.flagC);
+const utilForFlagC = Shapper.fn.executableIn(FlagsToTest.flagC, (state: ReduxStateType) => {
+  const concreteState = Shapper.concrete(state, FlagsToTest.flagC);
   return concreteState.prop4.test4.addedInC;
 });
 
@@ -22,9 +22,9 @@ const utilForFlagC = Flagger.fn.executableIn(FlagsToTest.flagC, (state: ReduxSta
 
 const ReduxState = {} as ReduxStateType;
 
-const ReduxStateFC = {} as ExtractByFlags<Flagger, ReduxStateType, [FlagsToTest.flagC]>;
+const ReduxStateFC = {} as ExtractByFlags<Shapper, ReduxStateType, [FlagsToTest.flagC]>;
 
-const ReduxStateFA: ExtractByFlags<Flagger, ReduxStateType, [FlagsToTest.flagA]> = {
+const ReduxStateFA: ExtractByFlags<Shapper, ReduxStateType, [FlagsToTest.flagA]> = {
   prop1: [String()],
   prop2: [String()],
   prop3: [Number()],

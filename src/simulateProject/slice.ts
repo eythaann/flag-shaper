@@ -1,9 +1,9 @@
-import { Flagger } from './initFlagger';
+import { Shapper } from './initFlagger';
 import { ReduxStateType } from './state';
 import { PayloadAction } from '@reduxjs/toolkit';
 import { FlagsToTest } from 'tests/shared/common';
 
-const { createSlice, reducerByFlag } = Flagger.redux.getSliceTools<ReduxStateType>();
+const { createSlice, reducerByFlag } = Shapper.redux.getSliceTools<ReduxStateType>();
 
 const state = {} as ReduxStateType;
 

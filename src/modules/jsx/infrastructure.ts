@@ -1,8 +1,8 @@
 import { JSXElementConstructor } from 'react';
 
-import { BaseFlagger } from '@shared/BaseFlagger/app';
+import { BaseFlagger } from 'modules/shared/BaseFlagger/app';
 
-import { AllowedFlags, IConfig } from '@shared/domain/interfaces';
+import { AllowedFlags, IConfig } from 'modules/shared/domain/interfaces';
 
 export class FlagShaperJSX<Flag extends AllowedFlags, Config extends IConfig> extends BaseFlagger<Flag, Config> {
   enableComponentIn<T>(

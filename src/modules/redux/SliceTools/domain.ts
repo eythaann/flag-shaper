@@ -2,9 +2,9 @@ import { ActionCreatorWithoutPayload, ActionReducerMapBuilder, CaseReducer, Case
 import { BaseActionCreator } from '@reduxjs/toolkit/dist/createAction';
 import { AnyObject, IsFunction, IsNever, IsStrictObject, Modify, NonUndefined, ValueOf } from 'readable-types';
 
-import { ExtractByFlags } from '../Flagger/app';
+import { ExtractByFlags } from '../../RootFlagger/app';
 
-import { AllowedFlags, IConfig } from '@shared/domain/interfaces';
+import { AllowedFlags, IConfig } from 'modules/shared/domain/interfaces';
 
 type reducerCallback<
   _state extends AnyObject,

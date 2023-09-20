@@ -10,7 +10,7 @@ import {
   TupleReduceHKT,
 } from 'readable-types';
 
-import { IConfig, Metadata } from '@shared/domain/interfaces';
+import { IConfig, Metadata } from 'modules/shared/domain/interfaces';
 
 type TupleType<T> = [T, ...T[]];
 
@@ -54,10 +54,10 @@ type _ExtractByFlags<
  *
  */
 export type ExtractByFlags<
-  Flagger extends { config: { keyForOverwrites: string } },
+  Shapper extends { config: { keyForOverwrites: string } },
   Type extends AnyObject,
   Flags extends [string, ...string[]] | [],
-> = _ExtractByFlags<Type, Flags, Flagger['config']['keyForOverwrites']>;
+> = _ExtractByFlags<Type, Flags, Shapper['config']['keyForOverwrites']>;
 
 /**
  *
@@ -68,11 +68,11 @@ export type ExtractByFlags<
  *
  */
 export type OverwriteByFlag<
-  Flagger extends { config: IConfig },
+  Shapper extends { config: IConfig },
   TypeBeforeFlags,
-  Overwrittes extends TupleType<[NonUndefined<Flagger['config']['flags']>, AnyObject]>,
+  Overwrittes extends TupleType<[NonUndefined<Shapper['config']['flags']>, AnyObject]>,
 > = Prettify<TypeBeforeFlags> & Metadata<{
-  types: ModifyByKeyPlusOrderedCombinations<TypeBeforeFlags, Overwrittes, Flagger['config']['keyForOverwrites']>;
+  types: ModifyByKeyPlusOrderedCombinations<TypeBeforeFlags, Overwrittes, Shapper['config']['keyForOverwrites']>;
 }>;
 // ---
 

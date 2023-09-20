@@ -7,9 +7,9 @@ module.exports = {
     'simple-import-sort/imports': ['error', {
       groups: [
         [''],
-        ['^(@shared).*(infra|infrastructure)', '^(@modules).*(infra|infrastructure)', '(infra|infrastructure)'],
-        ['^(@shared).*(app)', '^(@modules).*(app)', 'app'],
-        ['^(@shared).*(domain)', '^(@modules).*(domain)', 'domain'],
+        ['^(modules/shared).*(infra|infrastructure)', '^(modules).*(infra|infrastructure)', '(infra|infrastructure)'],
+        ['^(modules/shared).*(app)', '^(modules).*(app)', 'app'],
+        ['^(modules/shared).*(domain)', '^(modules).*(domain)', 'domain'],
       ],
     }],
     'key-spacing': ['error', { 'beforeColon': false }],

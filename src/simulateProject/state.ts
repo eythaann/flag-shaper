@@ -1,4 +1,4 @@
-import { Flagger, MyOverwriteByFlag } from './initFlagger';
+import { Shapper, MyOverwriteByFlag } from './initFlagger';
 import { FlagsToTest } from 'tests/shared/common';
 
 interface OldITestDeep {
@@ -36,4 +36,4 @@ export type ReduxStateType = MyOverwriteByFlag<OldReduxState, [
   [FlagsToTest.flagB, { prop3: boolean[] }]
 ]>;
 
-export const selectorBuilder = Flagger.rx.getSelectorBuilder<ReduxStateType>();
+export const selectorBuilder = Shapper.rx.getSelectorBuilder<ReduxStateType>();

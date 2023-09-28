@@ -1,6 +1,6 @@
 import { Shapper } from './initFlagger';
 import { ReduxStateType, selectorBuilder } from './state';
-import { FlagsToTest } from 'tests/shared/common';
+import { FlagsToTest } from '../tests/shared/common';
 
 import { ExtractByFlags } from 'modules/RootFlagger/app';
 

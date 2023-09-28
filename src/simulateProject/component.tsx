@@ -3,7 +3,7 @@ import { selectAddedInC, selectTest1 } from './selectors';
 import { actions } from './slice';
 import { ReduxStateType } from './state';
 import React, { Component, useState } from 'react';
-import { FlagsToTest } from 'tests/shared/common';
+import { FlagsToTest } from '../tests/shared/common';
 
 import { on } from 'modules/helpers/app';
 

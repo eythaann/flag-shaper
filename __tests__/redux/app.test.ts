@@ -2,10 +2,10 @@ import { FlagsToTest } from '../shared/common';
 import { IProp4, ITest4, ITestDeep4, ReduxState } from './mockets';
 import { Modify } from 'readable-types';
 
-import { OverwriteByFlag } from '../../modules/RootFlagger/app';
+import { OverwriteByFlag } from '../../src/modules/RootFlagger/app';
 
 import { getAllPosibleKeys } from 'modules/redux/SelectorBuilder/domain';
-import { Metadata } from '../../modules/shared/domain/interfaces';
+import { Metadata } from '../../src/modules/shared/domain/interfaces';
 
 describe('getAllPosibleKeys', () => {
   it('Should give me the keys of path', () => {

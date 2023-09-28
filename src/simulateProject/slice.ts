@@ -1,7 +1,7 @@
 import { Shapper } from './initFlagger';
 import { ReduxStateType } from './state';
 import { PayloadAction } from '@reduxjs/toolkit';
-import { FlagsToTest } from 'tests/shared/common';
+import { FlagsToTest } from '../tests/shared/common';
 
 const { createSlice, reducerByFlag, reducerBuilder } = Shapper.redux.getSliceTools<ReduxStateType>();
 

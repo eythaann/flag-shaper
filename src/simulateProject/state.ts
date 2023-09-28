@@ -1,4 +1,4 @@
-import { Shapper, MyOverwriteByFlag } from './initFlagger';
+import { MyOverwriteByFlag, Shapper } from './initFlagger';
 import { FlagsToTest } from 'tests/shared/common';
 
 interface OldITestDeep {
@@ -7,7 +7,7 @@ interface OldITestDeep {
   testDeep3: number;
 }
 
-type ITestDeep = MyOverwriteByFlag<OldITestDeep, [
+export type ITestDeep = MyOverwriteByFlag<OldITestDeep, [
   [FlagsToTest.flagA, { testDeep1: string }],
   [FlagsToTest.flagC, { addedInC: boolean[] }]
 ]>;

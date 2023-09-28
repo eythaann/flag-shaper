@@ -5,7 +5,15 @@ import { FlagsToTest } from 'tests/shared/common';
 
 const { createSlice, reducerByFlag, reducerBuilder } = Shapper.redux.getSliceTools<ReduxStateType>();
 
-const state = {} as ReduxStateType;
+const state = Shapper.obj.builder()
+  .setObjToOverwrite({
+    testDeep1: 0,
+    testDeep2: 1,
+    testDeep3: 2,
+  })
+  .addCase(FlagsToTest.flagA, { testDeep1: 'string' })
+  .addCase(FlagsToTest.flagC, { addedInC: [true] })
+  .build();
 
 const _slice = createSlice({
   name: 'test',

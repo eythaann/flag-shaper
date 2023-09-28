@@ -7,6 +7,7 @@ import { FlagsToTest } from 'tests/shared/common';
 
 import { on } from 'modules/helpers/app';
 
+import { MetadataKey } from 'modules/shared/domain/interfaces';
 import { MagnifigThing } from 'modules/jsx/domain';
 
 interface IProps {
@@ -16,8 +17,8 @@ interface IProps {
 }
 
 interface IState {
-  state1: '1';
-  state2: '2';
+  state1: number;
+  state2: number;
 }
 
 interface IMapStateToProps {
@@ -53,9 +54,9 @@ interface testjsx {
       state_for_1: string;
     }],
     [FlagsToTest.flagB, {
-      state1: string;
-      state2: string;
-      state_for_2: string;
+      state1: number;
+      state2: number;
+      state_for_2: number;
     }],
   ];
 
@@ -78,15 +79,15 @@ interface testjsx {
   ];
 }
 
-type ComponentStateAndProps = MagnifigThing<Shapper, testjsx>;
+type ComponentInterfaces = MagnifigThing<Shapper, testjsx>;
 
-const TestComponent = class TestClassComponent extends Component<ComponentStateAndProps['completeProps'], ComponentStateAndProps['InternalState']> {
-  constructor(props: ComponentStateAndProps['completeProps']) {
+const TestComponent = class TestClassComponent extends Component<ComponentInterfaces['completeProps'], ComponentInterfaces['InternalState']> {
+  constructor(props: ComponentInterfaces['completeProps']) {
     super(props);
     this.state = Shapper.obj.builder()
       .setObjToOverwrite({
-        state1: '1',
-        state2: '2',
+        state1: 1,
+        state2: 2,
       })
       .addCase(FlagsToTest.flagA, {
         state1: 'overrided',
@@ -94,9 +95,9 @@ const TestComponent = class TestClassComponent extends Component<ComponentStateA
         state_for_1: 'newProp',
       })
       .addCase(FlagsToTest.flagB, {
-        state1: 'overridedIn2',
-        state2: 'overridedIn2',
-        state_for_2: 'newProp',
+        state1: 1,
+        state2: 2,
+        state_for_2: 3,
       })
       .build();
   }
@@ -124,7 +125,7 @@ const TestComponent = class TestClassComponent extends Component<ComponentStateA
   }
 };
 
-const mapStateToProps = (state: ReduxStateType, ownProps: ComponentStateAndProps['ExternalProps']): ComponentStateAndProps['ReduxStateProps'] => {
+const mapStateToProps = (state: ReduxStateType, ownProps: ComponentInterfaces['ExternalProps']) => {
   //
   // ...some code
   //
@@ -156,7 +157,7 @@ const mapDispatchToProps = Shapper.obj.builder()
   })
   .build();
 
-const TestFlaggedComponent = Shapper.redux.connect<ComponentStateAndProps>(mapStateToProps, mapDispatchToProps)(TestComponent);
+const TestFlaggedComponent = Shapper.redux.connect<ComponentInterfaces>(mapStateToProps, mapDispatchToProps)(TestComponent);
 
 // ==================================================
 // ==================================================
@@ -167,7 +168,7 @@ const TestFlaggedComponent = Shapper.redux.connect<ComponentStateAndProps>(mapSt
 // ==================================================
 // ==================================================
 
-export const A = (_props: ComponentStateAndProps['ExternalProps']) => {
+export const A = (_props: ComponentInterfaces['ExternalProps']) => {
   const [state, setState] = useState(Shapper.getValueByFlag(0, [
     on(FlagsToTest.flagA).use(5),
     on(FlagsToTest.flagB).use(20),

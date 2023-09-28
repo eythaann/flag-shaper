@@ -1,6 +1,6 @@
 import { AnyObject, If, IsUndefined, IsUnknown, IteratorHKT, Modify, ModifyByKeyPlusOrderedCombinations, NonUndefined, Or, TupleIncludes, TupleReduceHKT } from 'readable-types';
 
-import { IConfig, Metadata } from 'modules/shared/domain/interfaces';
+import { IConfig, Metadata, MetadataKey } from 'modules/shared/domain/interfaces';
 
 export interface ConfigToConnect {
   props?: AnyObject;
@@ -42,7 +42,7 @@ export interface MagnifigThing<
   T extends ConfigToConnect,
   Key extends string = Shapper['config']['keyForOverwrites']
 > {
-  __metadata: T;
+  [MetadataKey]: T;
 
   ExternalProps: ModifyByKeyPlusOrderedCombinations<T['props'], NonUndefined<T['propsOverwrites']>, Key>;
   InternalState: ModifyByKeyPlusOrderedCombinations<T['internalState'], NonUndefined<T['internalStateOverwrites']>, Key>;

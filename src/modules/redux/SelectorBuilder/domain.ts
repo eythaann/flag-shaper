@@ -1,6 +1,6 @@
 import { AnyFunction, AnyObject, HasProperty, IsUnknown, IteratorHKT, KeysOfUnion, NonUndefined, TupleReduceHKT } from 'readable-types';
 
-import { Metadata } from 'modules/shared/domain/interfaces';
+import { Metadata, MetadataKey } from 'modules/shared/domain/interfaces';
 
 interface extractTypeFormPath<state> extends IteratorHKT.Tuple {
   initialAcc: state;
@@ -8,10 +8,10 @@ interface extractTypeFormPath<state> extends IteratorHKT.Tuple {
 }
 
 type SelectorByFlag<State extends AnyObject, Path extends unknown[]> = (
-  <S extends IsUnknown<State['__metadata']> extends false
-    ? S['__metadata'] extends State['__metadata']
-      ? Metadata<State['__metadata']>
-      : Required<Metadata<State['__metadata']>>
+  <S extends IsUnknown<State[MetadataKey]> extends false
+    ? S[MetadataKey] extends State[MetadataKey]
+      ? Metadata<State[MetadataKey]>
+      : Required<Metadata<State[MetadataKey]>>
     : State
   >(state: S) => TupleReduceHKT<Path, extractTypeFormPath<S>>
 ) & Metadata<Path>;
@@ -19,10 +19,10 @@ type SelectorByFlag<State extends AnyObject, Path extends unknown[]> = (
 export type getAllPosibleKeys<
   State,
   Fn extends Metadata<string[]>,
-  R = TupleReduceHKT<NonUndefined<Fn['__metadata']>, extractTypeFormPath<State>>
-> = HasProperty<R, '__metadata'> extends false
+  R = TupleReduceHKT<NonUndefined<Fn[MetadataKey]>, extractTypeFormPath<State>>
+> = HasProperty<R, MetadataKey> extends false
   ? keyof R
-  : Exclude<KeysOfUnion<_RT.ForceExtract<NonUndefined<_RT.ForceExtract<R, '__metadata'>>, 'types'>>, 'flagToUse'>;
+  : Exclude<KeysOfUnion<_RT.ForceExtract<NonUndefined<_RT.ForceExtract<R, MetadataKey>>, 'types'>>, 'flagToUse'>;
 
 export interface ISelectorBuilder<State extends AnyObject> {
   createSelector<K extends getAllPosibleKeys<State, Metadata<[]>>>(key: K): SelectorByFlag<State, [K]>;
@@ -31,10 +31,10 @@ export interface ISelectorBuilder<State extends AnyObject> {
   createSelectorFrom<
     Fn extends AnyFunction & Metadata<string[]>,
     Key extends getAllPosibleKeys<State, Fn>,
-  >(fn: Fn, path: Key): SelectorByFlag<State, [...NonUndefined<Fn['__metadata']>, Key]>;
+  >(fn: Fn, path: Key): SelectorByFlag<State, [...NonUndefined<Fn[MetadataKey]>, Key]>;
 
   createSelectorFrom<
     Fn extends AnyFunction & Metadata<string[]>,
     RestPath extends string[],
-  >(fn: Fn, path: [...RestPath]): SelectorByFlag<State, [...NonUndefined<Fn['__metadata']>, ...RestPath]>;
+  >(fn: Fn, path: [...RestPath]): SelectorByFlag<State, [...NonUndefined<Fn[MetadataKey]>, ...RestPath]>;
 }

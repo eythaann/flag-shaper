@@ -1,14 +1,15 @@
 import { AnyObject } from 'readable-types';
 
+import { ObjectBuilder } from './builder/infrastructure';
+
 import { BaseFlagger } from 'modules/shared/BaseFlagger/app';
 import { customExtract } from './app';
-import { ObjectFlagger } from './builder/app';
 
 import { AllowedFlags, IConfig } from 'modules/shared/domain/interfaces';
 
 export class FlagShaperForObjects<Flag extends AllowedFlags, Config extends IConfig> extends BaseFlagger<Flag, Config> {
   public builder() {
-    return new ObjectFlagger<Flag, Config>(this.validator, this.config);
+    return new ObjectBuilder<Flag, Config>(this.validator, this.config);
   }
 
   public wasObjectDeclaredWith<

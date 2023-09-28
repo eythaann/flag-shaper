@@ -10,7 +10,7 @@ import {
   TupleReduceHKT,
 } from 'readable-types';
 
-import { IConfig, Metadata } from 'modules/shared/domain/interfaces';
+import { IConfig, Metadata, MetadataKey } from 'modules/shared/domain/interfaces';
 
 type TupleType<T> = [T, ...T[]];
 
@@ -33,17 +33,17 @@ type _ExtractByFlags<
   T extends Metadata<{ types: { [_ in KeyToDiscriminate]?: unknown[] } }>,
   Flags extends [string, ...string[]] | [],
   KeyToDiscriminate extends string,
-  FilteredFlags = TupleReduceHKT<Flags, ReduceFlags< NonUndefined<NonUndefined<T['__metadata']>['types'][KeyToDiscriminate]>[number] > >,
+  FilteredFlags = TupleReduceHKT<Flags, ReduceFlags< NonUndefined<NonUndefined<T[MetadataKey]>['types'][KeyToDiscriminate]>[number] > >,
 
-> = HasProperty<T, '__metadata'> extends false
+> = HasProperty<T, MetadataKey> extends false
   ? __ExtractByFlags<T, Flags, KeyToDiscriminate>
   : Prettify<__ExtractByFlags<
-  Extract< NonUndefined<T['__metadata']>['types'], FilteredFlags extends []
+  Extract< NonUndefined<T[MetadataKey]>['types'], FilteredFlags extends []
     ? { [_ in KeyToDiscriminate]?: undefined }
     : { [_ in KeyToDiscriminate]: FilteredFlags } >,
   Flags,
   KeyToDiscriminate
-  >> & Metadata<NonUndefined<T['__metadata']>>;
+  >> & Metadata<NonUndefined<T[MetadataKey]>>;
 
 /**
  *

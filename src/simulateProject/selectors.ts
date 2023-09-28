@@ -4,6 +4,8 @@ import { FlagsToTest } from 'tests/shared/common';
 
 import { ExtractByFlags } from 'modules/RootFlagger/app';
 
+import { MetadataKey } from 'modules/shared/domain/interfaces';
+
 const selectProp4 = selectorBuilder.createSelector('prop4');
 
 export const selectTest1 = selectorBuilder.createSelectorFrom(selectProp4, 'test1');

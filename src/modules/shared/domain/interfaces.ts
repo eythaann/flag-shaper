@@ -9,6 +9,9 @@ export interface IConfig {
   readonly connectFn: AnyFunction;
 }
 
-export interface Metadata<T = unknown> {
-  __metadata?: T;
-}
+export const MetadataKey: unique symbol = Symbol('RT_METADATA_KEY');
+export type MetadataKey = typeof MetadataKey;
+
+export type Metadata<T = unknown> = {
+  [_ in MetadataKey]?: T;
+};

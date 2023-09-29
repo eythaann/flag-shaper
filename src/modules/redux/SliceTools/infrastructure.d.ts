@@ -1,6 +1,6 @@
 import { ActionCreatorWithoutPayload, ActionReducerMapBuilder, PayloadAction, Slice, SliceCaseReducers, ValidateSliceCaseReducers } from '@reduxjs/toolkit';
 import { _ActionCreatorWithPreparedPayload, BaseActionCreator } from '@reduxjs/toolkit/dist/createAction';
-import { AnyObject, IsNever, Modify } from 'readable-types';
+import { AnyObject, IsNever, Modify, NoInfer } from 'readable-types';
 
 import { CaseReducerBuilder } from './ReducerBuilder/infrastructure';
 
@@ -8,8 +8,6 @@ import { BaseFlagger } from 'modules/shared/BaseFlagger/app';
 import { reducerCallback } from './ReducerBuilder/app';
 
 import { AllowedFlags, IConfig } from 'modules/shared/domain/interfaces';
-
-export type NoInfer<T> = [T][T extends any ? 0 : never];
 
 /* type ReducersObject<
   State extends AnyObject,

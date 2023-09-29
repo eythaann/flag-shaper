@@ -43,7 +43,7 @@ type _ExtractByFlags<
     : { [_ in KeyToDiscriminate]: FilteredFlags } >,
   Flags,
   KeyToDiscriminate
-  >> & Metadata<NonUndefined<T[MetadataKey]>>;
+  >> & Metadata<T[MetadataKey]>;
 
 /**
  *

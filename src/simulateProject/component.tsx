@@ -5,9 +5,9 @@ import { actions } from './slice';
 import { ReduxStateType } from './state';
 import React, { Component, useState } from 'react';
 
-import { on } from 'modules/helpers/app';
+import { on } from '../modules/helpers/app';
 
-import { MagnifigThing } from 'modules/jsx/domain';
+import { MagnifigThing } from '../modules/jsx/domain';
 
 interface IProps {
   prop1: '1';

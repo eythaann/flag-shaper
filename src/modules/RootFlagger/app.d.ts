@@ -19,7 +19,7 @@ type __ExtractByFlags<
   KeyToDiscriminate extends string,
 > = {
   [Key in keyof T as Key extends KeyToDiscriminate ? never : Key]: IsStrictObject<T[Key]> extends true
-    ? ExtractByFlags<{ config: { keyForOverwrites: KeyToDiscriminate } }, Cast<T[Key], AnyObject>, Flags>
+    ? ApplyFlagsOnType<{ config: { keyForOverwrites: KeyToDiscriminate } }, Cast<T[Key], AnyObject>, Flags>
     : T[Key]
 };
 
@@ -52,7 +52,7 @@ type _ExtractByFlags<
  *
  *
  */
-export type ExtractByFlags<
+export type ApplyFlagsOnType<
   Shapper extends { config: { keyForOverwrites: string } },
   Type extends AnyObject,
   Flags extends [string, ...string[]] | [],
@@ -66,26 +66,10 @@ export type ExtractByFlags<
  *
  *
  */
-export type OverwriteByFlag<
+export type CreateFlaggedInterface<
   Shapper extends { config: IConfig },
   TypeBeforeFlags,
-  Overwrittes extends nLengthTuple<[NonUndefined<Shapper['config']['flags']>, AnyObject]>,
+  Overwrittes extends nLengthTuple<[string, AnyObject]>,
 > = Prettify<TypeBeforeFlags> & Metadata<{
   types: ModifyByKeyPlusOrderedCombinations<TypeBeforeFlags, Overwrittes, Shapper['config']['keyForOverwrites']>;
 }>;
-// ---
-
-// -- -- -- -- -- --
-/* export type Concrete<T extends AnyObject> = Prettify<_Concrete<T>>;
-
-type _Concrete<
-  T extends Metadata<{ types: { flagToUse?: unknown[] } }>,
-> = HasProperty<T, '__metadata'> extends false
-  ? __ConcreteProperties<T>
-  : __ConcreteProperties<NonUndefined<T['__metadata']>['types']>;
-
-type __ConcreteProperties<T> = {
-  [Key in keyof T]: IsStrictObject<T[Key]> extends true
-    ? Concrete<T[Key]>
-    : T[Key]
-}; */

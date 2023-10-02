@@ -8,7 +8,7 @@ import { FlagShaperForObjects } from '../objects/infrastructure';
 import { ReduxFlagShaper } from '../redux/Flagger/infrastructure';
 
 import { BaseFlagger } from '../shared/BaseFlagger/app';
-import { ExtractByFlags } from './app';
+import { ApplyFlagsOnType } from './app';
 
 import { DefaultConfig } from '../shared/domain/constants';
 import { AllowedFlags, FlagCheckerFn, IConfig } from '../shared/domain/interfaces';
@@ -34,8 +34,8 @@ export declare class FlagShaper<Flag extends AllowedFlags = string, Config exten
 
   public constructor(isFlagEnabled: FlagCheckerFn<Flag>, config: Readonly<Config>);
 
-  public concrete<S extends AnyObject, F extends Flag>(state: S, flag: F): ExtractByFlags<{ config: Config }, S, [F]>;
-  public concrete<S extends AnyObject, F extends [Flag, ...Flag[]]>(state: S, flags: F): ExtractByFlags<{ config: Config }, S, F>;
+  public concrete<S extends AnyObject, F extends Flag>(state: S, flag: F): ApplyFlagsOnType<{ config: Config }, S, [F]>;
+  public concrete<S extends AnyObject, F extends [Flag, ...Flag[]]>(state: S, flags: F): ApplyFlagsOnType<{ config: Config }, S, F>;
 
   public getValueByFlag<T, Over extends [[Flag, unknown], ...[Flag, unknown][]]>(init: T, over: Over): T | getValues<Over>;
 }

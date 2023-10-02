@@ -1,13 +1,12 @@
+import { FlagsToTest } from '../../__tests__/shared/common';
 import { Shapper } from './initFlagger';
 import { selectAddedInC, selectTest1 } from './selectors';
 import { actions } from './slice';
 import { ReduxStateType } from './state';
 import React, { Component, useState } from 'react';
-import { FlagsToTest } from '../tests/shared/common';
 
 import { on } from 'modules/helpers/app';
 
-import { MetadataKey } from 'modules/shared/domain/interfaces';
 import { MagnifigThing } from 'modules/jsx/domain';
 
 interface IProps {
@@ -112,6 +111,7 @@ const TestComponent = class TestClassComponent extends Component<ComponentInterf
     if (Shapper.obj.wasObjectDeclaredWith(this.props, [FlagsToTest.flagC])) {
       this.props.setAddedInC({ test: '123' });
     }
+
     /*
     if (Shapper.obj.wasObjectDeclaredWith(this.props, [FlagsToTest.flagB, FlagsToTest.flagA])) {
       this.props.flagToUse;
@@ -145,7 +145,7 @@ const mapStateToProps = (state: ReduxStateType, ownProps: ComponentInterfaces['E
         addedInC: selectAddedInC(concreteState),
       };
     })
-    .build();
+    .build({ forState: true });
 };
 
 const mapDispatchToProps = Shapper.obj.builder()
@@ -155,7 +155,7 @@ const mapDispatchToProps = Shapper.obj.builder()
   .addCase(FlagsToTest.flagC, {
     setAddedInC: actions.setAddedInC,
   })
-  .build();
+  .build({ forDispatch: true });
 
 const TestFlaggedComponent = Shapper.redux.connect<ComponentInterfaces>(mapStateToProps, mapDispatchToProps)(TestComponent);
 
@@ -184,7 +184,7 @@ export const A = (_props: ComponentInterfaces['ExternalProps']) => {
     <div>
       <div>
         <div>
-          <span> WOWWWWWWWW </span>
+          <span> WOWWWWWWWW, {state} </span>
         </div>
       </div>
     </div>

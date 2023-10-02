@@ -21,8 +21,10 @@ export class ObjectBuilder extends BaseFlagger {
     return this;
   };
 
-  build() {
+  build({ forState = false, forDispatch = false } = {}) {
     const newObject = this.#objToApply;
+    const dispatchPostfix = forDispatch ? '_dispatch' : '';
+    const keyToAddFlags = `${this.config.keyForOverwrites}${forState ? '_state' : dispatchPostfix}`;
 
     this.#overrides.forEach(([flag, override]) => {
       if (!this.validator.isFlagEnabled(flag)) {
@@ -32,8 +34,8 @@ export class ObjectBuilder extends BaseFlagger {
       const overObject = typeof override === 'function' ? override() : override;
 
       Object.assign(newObject, overObject);
-      newObject[this.config.keyForOverwrites] ??= [];
-      newObject[this.config.keyForOverwrites].push(flag);
+      newObject[keyToAddFlags] ??= [];
+      newObject[keyToAddFlags].push(flag);
     });
 
     return newObject;

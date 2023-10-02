@@ -1,4 +1,4 @@
-import { AnyObject, IteratorHKT, TupleReduceHKT } from 'readable-types';
+import { AnyObject, IteratorHKT, nLengthTuple, TupleReduceHKT } from 'readable-types';
 
 import { BaseFlagger } from 'modules/shared/BaseFlagger/app';
 import { reducerCallback } from './app';
@@ -14,7 +14,7 @@ export class CaseReducerBuilder<
   State extends AnyObject,
   FlagType extends AllowedFlags,
   Config extends IConfig,
-  CaseReducers extends [FlagType | FlagType[], AnyObject][] = [],
+  CaseReducers extends nLengthTuple<[FlagType | FlagType[], AnyObject]> = [],
   DefaultCase = undefined,
 > extends BaseFlagger<FlagType, Config> {
   /** When flags added to cases are not enabled ejecute default reducer */

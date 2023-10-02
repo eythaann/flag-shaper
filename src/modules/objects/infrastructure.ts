@@ -21,6 +21,13 @@ export class FlagShaperForObjects<Flag extends AllowedFlags, Config extends ICon
     if (flags.length === 0) {
       return !obj[this.config.keyForOverwrites];
     }
-    return obj[this.config.keyForOverwrites] && flags.every((flag) => obj[this.config.keyForOverwrites].includes(flag));
+
+    const flagsOnObj = new Set();
+
+    (obj[this.config.keyForOverwrites] || []).array.forEach((element: any) => flagsOnObj.add(element));
+    (obj[`${this.config.keyForOverwrites}_state`] || []).array.forEach((element: any) => flagsOnObj.add(element));
+    (obj[`${this.config.keyForOverwrites}_dispatch`] || []).array.forEach((element: any) => flagsOnObj.add(element));
+
+    return obj[this.config.keyForOverwrites] && flags.every((flag) => flagsOnObj.has(flag));
   }
 }

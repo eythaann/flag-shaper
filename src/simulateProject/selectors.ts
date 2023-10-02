@@ -1,10 +1,8 @@
+import { FlagsToTest } from '../../__tests__/shared/common';
 import { Shapper } from './initFlagger';
 import { ReduxStateType, selectorBuilder } from './state';
-import { FlagsToTest } from '../tests/shared/common';
 
 import { ExtractByFlags } from 'modules/RootFlagger/app';
-
-import { MetadataKey } from 'modules/shared/domain/interfaces';
 
 const selectProp4 = selectorBuilder.createSelector('prop4');
 

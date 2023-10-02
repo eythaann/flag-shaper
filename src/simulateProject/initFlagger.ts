@@ -1,7 +1,7 @@
+import { FlagsToTest } from '../../__tests__/shared/common';
 import { createSlice as createSliceFn } from '@reduxjs/toolkit';
 import { connect as connectFn } from 'react-redux';
 import { AnyObject } from 'readable-types';
-import { FlagsToTest } from '../tests/shared/common';
 
 import { FlagShaper } from 'modules/RootFlagger/infrastructure';
 

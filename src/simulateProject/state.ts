@@ -1,5 +1,5 @@
+import { FlagsToTest } from '../../__tests__/shared/common';
 import { MyOverwriteByFlag, Shapper } from './initFlagger';
-import { FlagsToTest } from '../tests/shared/common';
 
 interface OldITestDeep {
   testDeep1: number;

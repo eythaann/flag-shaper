@@ -1,4 +1,4 @@
-import { AnyFunction, NonUndefined, ValueOf } from 'readable-types';
+import { AnyFunction } from 'readable-types';
 
 import { BaseFlagger } from 'modules/shared/BaseFlagger/app';
 

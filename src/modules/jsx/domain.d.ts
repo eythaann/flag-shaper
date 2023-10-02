@@ -1,6 +1,6 @@
 import { AnyObject, If, IsUndefined, IsUnknown, IteratorHKT, Modify, ModifyByKeyPlusOrderedCombinations, NonUndefined, Or, TupleIncludes, TupleReduceHKT } from 'readable-types';
 
-import { IConfig, Metadata, MetadataKey } from 'modules/shared/domain/interfaces';
+import { IConfig, Metadata, MetadataKey } from '../shared/domain/interfaces';
 
 export interface ConfigToConnect {
   props?: AnyObject;

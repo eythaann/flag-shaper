@@ -1,6 +1,6 @@
 import { AnyFunction, AnyObject, NonUndefined } from 'readable-types';
 
-import { Metadata, MetadataKey } from 'modules/shared/domain/interfaces';
+import { Metadata, MetadataKey } from '../../shared/domain/interfaces';
 import { getAllPosibleKeys, SelectorByFlag } from './domain';
 
 export declare class SelectorBuilder<State extends AnyObject> {

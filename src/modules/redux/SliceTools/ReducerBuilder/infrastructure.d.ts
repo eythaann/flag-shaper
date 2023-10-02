@@ -1,9 +1,9 @@
 import { AnyObject, IteratorHKT, nLengthTuple, TupleReduceHKT } from 'readable-types';
 
-import { BaseFlagger } from 'modules/shared/BaseFlagger/app';
+import { BaseFlagger } from '../../../shared/BaseFlagger/app';
 import { reducerCallback } from './app';
 
-import { AllowedFlags, IConfig } from 'modules/shared/domain/interfaces';
+import { AllowedFlags, IConfig } from '../../../shared/domain/interfaces';
 
 interface ReducersToUnion extends IteratorHKT.Tuple<[unknown, AnyObject]> {
   initialAcc: never;

@@ -11,7 +11,7 @@ import {
   TupleReduceHKT,
 } from 'readable-types';
 
-import { IConfig, Metadata, MetadataKey } from 'modules/shared/domain/interfaces';
+import { IConfig, Metadata, MetadataKey } from '../shared/domain/interfaces';
 
 type __ExtractByFlags<
   T,

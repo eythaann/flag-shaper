@@ -1,17 +1,17 @@
 import { AnyObject, IteratorHKT, TupleReduceHKT } from 'readable-types';
 
-import { FlagShaperForFunctions } from 'modules/functions/infrastructure';
 import { FlagValidator } from '../checker/infrastructure';
 import { FlagShaperDecorators } from '../decorators/infrastructure';
+import { FlagShaperForFunctions } from '../functions/infrastructure';
 import { FlagShaperJSX } from '../jsx/infrastructure';
 import { FlagShaperForObjects } from '../objects/infrastructure';
 import { ReduxFlagShaper } from '../redux/Flagger/infrastructure';
 
-import { BaseFlagger } from 'modules/shared/BaseFlagger/app';
+import { BaseFlagger } from '../shared/BaseFlagger/app';
 import { ExtractByFlags } from './app';
 
-import { DefaultConfig } from 'modules/shared/domain/constants';
-import { AllowedFlags, FlagCheckerFn, IConfig } from 'modules/shared/domain/interfaces';
+import { DefaultConfig } from '../shared/domain/constants';
+import { AllowedFlags, FlagCheckerFn, IConfig } from '../shared/domain/interfaces';
 
 export declare class FlagShaper<Flag extends AllowedFlags = string, Config extends IConfig = typeof DefaultConfig> extends BaseFlagger<Flag, Config> {
   public readonly validator: FlagValidator<Flag>;

@@ -17,7 +17,8 @@
     "jsx": "react",
     "allowSyntheticDefaultImports": true,
 
-    "baseUrl": "./src",
+    "noEmit": true,
+    "incremental": true,
   },
   "include": [
     "src"

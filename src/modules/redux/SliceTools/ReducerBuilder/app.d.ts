@@ -1,7 +1,7 @@
 import type { CaseReducer, CaseReducerWithPrepare, PayloadAction } from '@reduxjs/toolkit';
 import { AnyObject } from 'readable-types';
 
-import { ExtractByFlags } from 'modules/RootFlagger/app';
+import { ExtractByFlags } from '../../../RootFlagger/app';
 
 export type reducerCallback<
   _state extends AnyObject,

@@ -1,8 +1,8 @@
-import { AnyFunction, AnyObject, Cast, IsFunction, IteratorHKT, ModifyByKeyPlusOrderedCombinations, Prettify, TupleMapHKT } from 'readable-types';
+import { AnyObject, IsFunction, IteratorHKT, ModifyByKeyPlusOrderedCombinations, Prettify, TupleMapHKT } from 'readable-types';
 
-import { BaseFlagger } from 'modules/shared/BaseFlagger/app';
+import { BaseFlagger } from '../../shared/BaseFlagger/app';
 
-import { AllowedFlags, IConfig } from 'modules/shared/domain/interfaces';
+import { AllowedFlags, IConfig } from '../../shared/domain/interfaces';
 
 interface FnToObj extends IteratorHKT.Tuple<[string, AnyObject]> {
   return: [

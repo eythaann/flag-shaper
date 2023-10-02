@@ -4,10 +4,10 @@ import { AnyObject, IsNever, Modify, NoInfer } from 'readable-types';
 
 import { CaseReducerBuilder } from './ReducerBuilder/infrastructure';
 
-import { BaseFlagger } from 'modules/shared/BaseFlagger/app';
+import { BaseFlagger } from '../../shared/BaseFlagger/app';
 import { reducerCallback } from './ReducerBuilder/app';
 
-import { AllowedFlags, IConfig } from 'modules/shared/domain/interfaces';
+import { AllowedFlags, IConfig } from '../../shared/domain/interfaces';
 
 /* type ReducersObject<
   State extends AnyObject,

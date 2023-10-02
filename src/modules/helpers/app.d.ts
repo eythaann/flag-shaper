@@ -1,4 +1,4 @@
-import { AllowedFlags } from 'modules/shared/domain/interfaces';
+import { AllowedFlags } from '../shared/domain/interfaces';
 
 export declare const on: <F extends AllowedFlags>(flag: F) => {
   use: <X>(x: X) => [F, X];

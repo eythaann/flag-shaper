@@ -1,6 +1,6 @@
 {
   "name": "flag-shaper",
-  "version": "0.9.1",
+  "version": "1.9.2",
   "description": "",
   "types": "./lib/index.d.ts",
   "main": "./lib/index.js",

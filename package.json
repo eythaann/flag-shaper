@@ -2,8 +2,8 @@
   "name": "flag-shaper",
   "version": "0.9.0",
   "description": "",
-  "types": "/lib/index.d.ts",
-  "main": "/lib/index.js",
+  "types": "./lib/index.d.ts",
+  "main": "./lib/index.js",
   "scripts": {
     "test": "jest",
     "lint": "eslint \"./src/**/*.{ts,tsx}\" --max-warnings 0",

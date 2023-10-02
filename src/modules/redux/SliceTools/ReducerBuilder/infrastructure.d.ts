@@ -19,8 +19,9 @@ export class CaseReducerBuilder<
 > extends BaseFlagger<FlagType, Config> {
   /** When flags added to cases are not enabled ejecute default reducer */
   setDefault<T extends reducerCallback<State, [], Config['keyForOverwrites']>>(reducer: T): CaseReducerBuilder<State, FlagType, Config, CaseReducers, T>;
-
+  // @ts-ignore
   addCase<flag extends FlagType, reducer extends reducerCallback<State, [flag], Config['keyForOverwrites']>>(flag: flag, reducer: reducer, forceEnableOn?: FlagType[]): CaseReducerBuilder<State, FlagType, Config, [...CaseReducers, [flag, reducer]], DefaultCase>;
+  // @ts-ignore
   addCase<flags extends [FlagType, ...FlagType[]], reducer extends reducerCallback<State, flags, Config['keyForOverwrites']>>(flags: flags, reducer: reducer, forceEnableOn?: FlagType[]): CaseReducerBuilder<State, FlagType, Config, [...CaseReducers, [flags, reducer]], DefaultCase>;
 
   build(): DefaultCase | TupleReduceHKT<CaseReducers, ReducersToUnion>;

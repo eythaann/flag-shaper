@@ -2,12 +2,13 @@
   "name": "flag-shaper",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "types": "/lib/index.d.ts",
+  "main": "/lib/index.js",
   "scripts": {
-    "start": "ts-node ./src/index.ts",
     "test": "jest",
     "lint": "eslint \"./src/**/*.{ts,tsx}\" --max-warnings 0",
-    "lint:fix": "eslint \"./src/**/*.{ts,tsx}\" --max-warnings 0 --fix"
+    "lint:fix": "eslint \"./src/**/*.{ts,tsx}\" --max-warnings 0 --fix",
+    "build": "tsc --incremental"
   },
   "author": "",
   "license": "MIT",

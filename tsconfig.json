@@ -3,6 +3,7 @@
     "lib": ["ESNext", "DOM"],
     "moduleResolution": "Node",
     "target": "ES2016",
+    "module": "AMD",
     
     "noImplicitReturns": true,
     "noImplicitThis": true,
@@ -11,15 +12,20 @@
     "noImplicitAny": true,
     "noUncheckedIndexedAccess": true,
     "noFallthroughCasesInSwitch": true,
-    "noEmit": true,
     "noErrorTruncation": true,
 
     "jsx": "react",
     "allowSyntheticDefaultImports": true,
 
     "baseUrl": "./src",
+    "outDir": "./lib",
+    "declaration": true,
+    "allowJs": true,
   },
+  "include": [
+    "src"
+  ],
   "exclude": [
-    "node_modules",
+    "src/simulateProject"
   ]
 }

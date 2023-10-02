@@ -32,6 +32,7 @@ interface testR1 extends IteratorHKT.Tuple<[string, AnyObject], [string, AnyObje
   initialAcc: [];
   return: TupleIncludes<this['acc'], [this['current'][0], AnyObject]> extends true
     ? this['acc']
+    // @ts-ignore
     : [...this['acc'], [this['current'][0], TupleReduceHKT<this['tuple'], testR2<this['current'][0]>>]];
 }
 
@@ -51,7 +52,9 @@ export interface MagnifigThing<
 
   completeProps: ModifyByKeyPlusOrderedCombinations<
   Modify<Modify<T['props'], T['stateProps']>, T['dispatchProps']>,
+  // @ts-ignore
   TupleReduceHKT<[
+    // @ts-ignore
     ...DefaultValue<T['propsOverwrites'], []>,
     ...DefaultValue<T['statePropsOverwrites'], []>,
     ...DefaultValue<T['dispatchPropsOverwrites'], []>,

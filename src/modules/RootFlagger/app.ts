@@ -5,14 +5,13 @@ import {
   IsStrictObject,
   IteratorHKT,
   ModifyByKeyPlusOrderedCombinations,
+  nLengthTuple,
   NonUndefined,
   Prettify,
   TupleReduceHKT,
 } from 'readable-types';
 
 import { IConfig, Metadata, MetadataKey } from 'modules/shared/domain/interfaces';
-
-type TupleType<T> = [T, ...T[]];
 
 type __ExtractByFlags<
   T,
@@ -70,7 +69,7 @@ export type ExtractByFlags<
 export type OverwriteByFlag<
   Shapper extends { config: IConfig },
   TypeBeforeFlags,
-  Overwrittes extends TupleType<[NonUndefined<Shapper['config']['flags']>, AnyObject]>,
+  Overwrittes extends nLengthTuple<[NonUndefined<Shapper['config']['flags']>, AnyObject]>,
 > = Prettify<TypeBeforeFlags> & Metadata<{
   types: ModifyByKeyPlusOrderedCombinations<TypeBeforeFlags, Overwrittes, Shapper['config']['keyForOverwrites']>;
 }>;

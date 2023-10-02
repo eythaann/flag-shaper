@@ -8,10 +8,12 @@ interface FnToObj extends IteratorHKT.Tuple<[string, AnyObject]> {
   return: [
     this['current'][0],
     IsFunction<this['current'][1]> extends true
-      ? ReturnType<Cast<this['current'][1], AnyFunction>>
+      // @ts-ignore
+      ? ReturnType<this['current'][1]>
       : this['current'][1]
   ];
 }
+// @ts-ignore
 type OverFnToOverObj<T extends unknown[]> = TupleMapHKT<T, FnToObj>;
 
 /* type Inferable =

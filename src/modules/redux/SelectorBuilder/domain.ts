@@ -13,12 +13,14 @@ type SelectorByFlag<State extends AnyObject, Path extends unknown[]> = (
       ? Metadata<State[MetadataKey]>
       : Required<Metadata<State[MetadataKey]>>
     : State
+  // @ts-ignore
   >(state: S) => TupleReduceHKT<Path, extractTypeFormPath<S>>
 ) & Metadata<Path>;
 
 export type getAllPosibleKeys<
   State,
   Fn extends Metadata<string[]>,
+  // @ts-ignore
   R = TupleReduceHKT<NonUndefined<Fn[MetadataKey]>, extractTypeFormPath<State>>
 > = HasProperty<R, MetadataKey> extends false
   ? keyof R

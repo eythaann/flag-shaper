@@ -1,4 +1,3 @@
-
 import { BaseFlagger } from 'modules/shared/BaseFlagger/app';
 
 export class FlagShaperForObjects extends BaseFlagger {

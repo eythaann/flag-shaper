@@ -1,4 +1,4 @@
-import { AnyFunction, AnyObject, HasProperty, IsUnknown, IteratorHKT, KeysOfUnion, NonUndefined, TupleReduceHKT } from 'readable-types';
+import { AnyObject, HasProperty, IsUnknown, IteratorHKT, KeysOfUnion, NonUndefined, TupleReduceHKT } from 'readable-types';
 
 import { Metadata, MetadataKey } from 'modules/shared/domain/interfaces';
 
@@ -26,17 +26,3 @@ export type getAllPosibleKeys<
   ? keyof R
   : Exclude<KeysOfUnion<_RT.ForceExtract<NonUndefined<_RT.ForceExtract<R, MetadataKey>>, 'types'>>, 'flagToUse'>;
 
-export interface ISelectorBuilder<State extends AnyObject> {
-  createSelector<K extends getAllPosibleKeys<State, Metadata<[]>>>(key: K): SelectorByFlag<State, [K]>;
-  createSelector<Path extends string[]>(path: [...Path]): SelectorByFlag<State, Path>;
-
-  createSelectorFrom<
-    Fn extends AnyFunction & Metadata<string[]>,
-    Key extends getAllPosibleKeys<State, Fn>,
-  >(fn: Fn, path: Key): SelectorByFlag<State, [...NonUndefined<Fn[MetadataKey]>, Key]>;
-
-  createSelectorFrom<
-    Fn extends AnyFunction & Metadata<string[]>,
-    RestPath extends string[],
-  >(fn: Fn, path: [...RestPath]): SelectorByFlag<State, [...NonUndefined<Fn[MetadataKey]>, ...RestPath]>;
-}

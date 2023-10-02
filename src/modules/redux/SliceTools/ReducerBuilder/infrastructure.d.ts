@@ -10,7 +10,7 @@ interface ReducersToUnion extends IteratorHKT.Tuple<[unknown, AnyObject]> {
   return: this['acc'] | this['current'][1];
 }
 
-export class CaseReducerBuilder<
+export declare class CaseReducerBuilder<
   State extends AnyObject,
   FlagType extends AllowedFlags,
   Config extends IConfig,

@@ -58,7 +58,7 @@ type CaseReducerActions<CaseReducers extends SliceCaseReducers<any>, SliceName e
     : ActionCreatorForCaseReducer<CaseReducers[ActionName], SliceActionType<SliceName, ActionName>>
 };
 
-export class SliceTools<State extends AnyObject, Flag extends AllowedFlags, Config extends IConfig> extends BaseFlagger<Flag, Config> {
+export declare class SliceTools<State extends AnyObject, Flag extends AllowedFlags, Config extends IConfig> extends BaseFlagger<Flag, Config> {
   createSlice<_S, R extends SliceCaseReducers<any>, Name extends string>(opt: {
     name: Name;
     initialState: any | (() => any);

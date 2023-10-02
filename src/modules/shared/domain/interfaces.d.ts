@@ -10,7 +10,7 @@ export interface IConfig {
   readonly flags?: string;
 }
 
-export const MetadataKey: unique symbol = Symbol('RT_METADATA_KEY');
+export declare const MetadataKey: unique symbol;
 export type MetadataKey = typeof MetadataKey;
 
 export type Metadata<T = unknown> = {

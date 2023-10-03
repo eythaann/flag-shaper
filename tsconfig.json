@@ -3,7 +3,6 @@
     "lib": ["ESNext", "DOM"],
     "moduleResolution": "Node",
     "target": "ESNext",
-    "module": "AMD",
     
     "noImplicitReturns": true,
     "noImplicitThis": true,

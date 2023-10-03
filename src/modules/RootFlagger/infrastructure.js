@@ -1,13 +1,13 @@
-import { FlagShaperForFunctions } from 'modules/functions/infrastructure';
 import { FlagValidator } from '../checker/infrastructure';
 import { FlagShaperDecorators } from '../decorators/infrastructure';
+import { FlagShaperForFunctions } from '../functions/infrastructure';
 import { FlagShaperJSX } from '../jsx/infrastructure';
 import { FlagShaperForObjects } from '../objects/infrastructure';
-import { ReduxFlagShaper } from '../redux/Flagger/infrastructure';
+import { ReduxFlagShaper } from '../redux/infrastructure';
 
-import { BaseFlagger } from 'modules/shared/BaseFlagger/app';
+import { BaseFlagger } from '../shared/BaseFlagger/app';
 
-import { DefaultConfig } from 'modules/shared/domain/constants';
+import { DefaultConfig } from '../shared/domain/constants';
 
 export class FlagShaper extends BaseFlagger {
   constructor(isFlagEnabled, config = DefaultConfig) {

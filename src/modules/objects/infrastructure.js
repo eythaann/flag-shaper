@@ -1,6 +1,12 @@
-import { BaseFlagger } from 'modules/shared/BaseFlagger/app';
+import { ObjectBuilder } from './builder/infrastructure';
+
+import { BaseFlagger } from '../shared/BaseFlagger/app';
 
 export class FlagShaperForObjects extends BaseFlagger {
+  builder() {
+    return new ObjectBuilder(this.validator, this.config);
+  };
+
   wasObjectDeclaredWith(obj, flags) {
     if (flags.length === 0) {
       return !obj[this.config.keyForOverwrites];

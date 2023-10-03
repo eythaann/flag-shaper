@@ -1,4 +1,4 @@
-import { BaseFlagger } from 'modules/shared/BaseFlagger/app';
+import { BaseFlagger } from '../shared/BaseFlagger/app';
 
 export class FlagShaperForFunctions extends BaseFlagger {
   executableIn(flag, fn) {

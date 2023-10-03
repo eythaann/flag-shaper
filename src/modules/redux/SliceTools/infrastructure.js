@@ -9,7 +9,7 @@ export class SliceTools extends BaseFlagger {
 
   reducerByFlag(flags, reducer) {
     return (...args) => {
-      if (validator.allFlagsAreEnabled(flags)) {
+      if (this.validator.allFlagsAreEnabled(flags)) {
         return reducer(...args);
       }
     };

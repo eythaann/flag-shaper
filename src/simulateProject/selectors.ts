@@ -2,7 +2,7 @@ import { FlagsToTest } from '../../__tests__/shared/common';
 import { Shapper } from './initFlagger';
 import { ReduxStateType, selectorBuilder } from './state';
 
-import { ExtractByFlags } from 'modules/RootFlagger/app';
+import { ApplyFlagsOnType } from '../modules/RootFlagger/app';
 
 const selectProp4 = selectorBuilder.createSelector('prop4');
 
@@ -22,9 +22,9 @@ const utilForFlagC = Shapper.fn.executableIn(FlagsToTest.flagC, (state: ReduxSta
 
 const ReduxState = {} as ReduxStateType;
 
-const ReduxStateFC = {} as ExtractByFlags<Shapper, ReduxStateType, [FlagsToTest.flagC]>;
+const ReduxStateFC = {} as ApplyFlagsOnType<Shapper, ReduxStateType, [FlagsToTest.flagC]>;
 
-const ReduxStateFA: ExtractByFlags<Shapper, ReduxStateType, [FlagsToTest.flagA]> = {
+const ReduxStateFA: ApplyFlagsOnType<Shapper, ReduxStateType, [FlagsToTest.flagA]> = {
   prop1: [String()],
   prop2: [String()],
   prop3: [Number()],

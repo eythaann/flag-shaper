@@ -27,12 +27,15 @@ type OverFnToOverObj<T extends unknown[]> = TupleMapHKT<T, FnToObj>;
     [prop: string]: Inferable;
   }; */
 
-export class ObjectBuilder<
+export declare class ObjectBuilder<
   Flag extends AllowedFlags,
   Config extends IConfig,
   Over extends [Flag, AnyObject][] = [],
   ObjToApply extends AnyObject = {}
 > extends BaseFlagger<Flag, Config> {
+  private _overrides: Over;
+  private _objToApply: ObjToApply;
+
   addCase<F extends Flag, V extends AnyObject>(flag: F, x: V): ObjectBuilder<Flag, Config, [...Over, [F, V]], ObjToApply>;
 
   get overrides(): Over;

@@ -1,4 +1,4 @@
-import { BaseFlagger } from 'modules/shared/BaseFlagger/app';
+import { BaseFlagger } from '../shared/BaseFlagger/app';
 
 export class FlagShaperJSX extends BaseFlagger {
   enableComponentIn(flag, component) {

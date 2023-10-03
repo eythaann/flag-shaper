@@ -25,4 +25,3 @@ export type getAllPosibleKeys<
 > = HasProperty<R, MetadataKey> extends false
   ? keyof R
   : Exclude<KeysOfUnion<_RT.ForceExtract<NonUndefined<_RT.ForceExtract<R, MetadataKey>>, 'types'>>, 'flagToUse'>;
-

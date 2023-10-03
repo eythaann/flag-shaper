@@ -1,13 +1,13 @@
 import type { JSXElementConstructor, ReactNode } from 'react';
 import { AnyObject, Prettify } from 'readable-types';
 
-import { SelectorBuilder } from '../SelectorBuilder/infrastructure';
-import { SliceTools } from '../SliceTools/infrastructure';
+import { SelectorBuilder } from './SelectorBuilder/infrastructure';
+import { SliceTools } from './SliceTools/infrastructure';
 
-import { BaseFlagger } from '../../shared/BaseFlagger/app';
+import { BaseFlagger } from '../shared/BaseFlagger/app';
 
-import { FlaggedPropsAndState } from '../../jsx/domain';
-import { AllowedFlags, IConfig } from '../../shared/domain/interfaces';
+import { FlaggedPropsAndState } from '../jsx/domain';
+import { AllowedFlags, IConfig } from '../shared/domain/interfaces';
 
 export declare class ReduxFlagShaper<Flag extends AllowedFlags, Config extends IConfig> extends BaseFlagger<Flag, Config> {
   public getSelectorBuilder<State extends AnyObject>(): SelectorBuilder<State>;

@@ -1,4 +1,4 @@
-import { MetadataKey } from 'modules/shared/domain/interfaces';
+import { MetadataKey } from '../../shared/domain/interfaces';
 
 export class SelectorBuilder {
   createSelector(path) {

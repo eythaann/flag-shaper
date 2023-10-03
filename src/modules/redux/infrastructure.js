@@ -1,7 +1,7 @@
 import { SelectorBuilder } from '../SelectorBuilder/infrastructure';
 import { SliceTools } from '../SliceTools/infrastructure';
 
-import { BaseFlagger } from 'modules/shared/BaseFlagger/app';
+import { BaseFlagger } from '../shared/BaseFlagger/app';
 
 export class ReduxFlagShaper extends BaseFlagger {
   getSelectorBuilder() {

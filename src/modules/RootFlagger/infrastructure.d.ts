@@ -5,7 +5,7 @@ import { FlagShaperDecorators } from '../decorators/infrastructure';
 import { FlagShaperForFunctions } from '../functions/infrastructure';
 import { FlagShaperJSX } from '../jsx/infrastructure';
 import { FlagShaperForObjects } from '../objects/infrastructure';
-import { ReduxFlagShaper } from '../redux/Flagger/infrastructure';
+import { ReduxFlagShaper } from '../redux/infrastructure';
 
 import { BaseFlagger } from '../shared/BaseFlagger/app';
 import { ApplyFlagsOnType } from './app';

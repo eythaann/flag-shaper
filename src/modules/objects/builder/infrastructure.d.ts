@@ -52,5 +52,5 @@ export declare class ObjectBuilder<
   >(): this;
   */
 
-  build(config?: { forState?: boolean; forDispatch?: boolean }): Prettify<ModifyByKeyPlusOrderedCombinations<ObjToApply, OverFnToOverObj<Over>, Config['keyForOverwrites']>>;
+  build(config?: { forState?: boolean; forDispatch?: boolean }): {} & Prettify<ModifyByKeyPlusOrderedCombinations<ObjToApply, OverFnToOverObj<Over>, Config['keyForOverwrites']>>;
 }

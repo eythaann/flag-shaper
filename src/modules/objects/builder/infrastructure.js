@@ -1,3 +1,5 @@
+import { cloneDeep } from '../../shared/app/utils';
+import { BaseFlagger } from '../../shared/BaseFlagger/app';;
 export class ObjectBuilder extends BaseFlagger {
   _overrides = [];
   _objToApply = {};
@@ -21,7 +23,7 @@ export class ObjectBuilder extends BaseFlagger {
   }; */
 
   build({ forState = false, forDispatch = false } = {}) {
-    const newObject = this._objToApply;
+    const newObject = cloneDeep(this._objToApply);
     const dispatchPostfix = forDispatch ? '_dispatch' : '';
     const keyToAddFlags = `${this.config.keyForOverwrites}${forState ? '_state' : dispatchPostfix}`;
 

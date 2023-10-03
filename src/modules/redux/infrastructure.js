@@ -1,5 +1,5 @@
-import { SelectorBuilder } from '../SelectorBuilder/infrastructure';
-import { SliceTools } from '../SliceTools/infrastructure';
+import { SelectorBuilder } from './SelectorBuilder/infrastructure';
+import { SliceTools } from './SliceTools/infrastructure';
 
 import { BaseFlagger } from '../shared/BaseFlagger/app';
 

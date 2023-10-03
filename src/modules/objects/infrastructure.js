@@ -8,16 +8,23 @@ export class FlagShaperForObjects extends BaseFlagger {
   };
 
   wasObjectDeclaredWith(obj, flags) {
+    const objHasFlags = !!obj[this.config.keyForOverwrites]
+    || !!obj[`${this.config.keyForOverwrites}_state`]
+    || !!obj[`${this.config.keyForOverwrites}_dispatch`];
+
     if (flags.length === 0) {
-      return !obj[this.config.keyForOverwrites];
+      return !objHasFlags;
+    }
+
+    if (!objHasFlags) {
+      return false;
     }
 
     const flagsOnObj = new Set();
+    (obj[this.config.keyForOverwrites] || []).forEach((element) => flagsOnObj.add(element));
+    (obj[`${this.config.keyForOverwrites}_state`] || []).forEach((element) => flagsOnObj.add(element));
+    (obj[`${this.config.keyForOverwrites}_dispatch`] || []).forEach((element) => flagsOnObj.add(element));
 
-    (obj[this.config.keyForOverwrites] || []).array.forEach((element) => flagsOnObj.add(element));
-    (obj[`${this.config.keyForOverwrites}_state`] || []).array.forEach((element) => flagsOnObj.add(element));
-    (obj[`${this.config.keyForOverwrites}_dispatch`] || []).array.forEach((element) => flagsOnObj.add(element));
-
-    return obj[this.config.keyForOverwrites] && flags.every((flag) => flagsOnObj.has(flag));
+    return flags.every((flag) => flagsOnObj.has(flag));
   }
 }

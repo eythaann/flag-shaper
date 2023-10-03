@@ -1,6 +1,6 @@
 {
   "name": "flag-shaper",
-  "version": "0.9.7",
+  "version": "0.9.8",
   "description": "",
   "type": "module",
   "types": "./src/index.d.ts",

@@ -80,7 +80,7 @@ interface testjsx {
 
 type ComponentInterfaces = MagnifigThing<Shapper, testjsx>;
 
-const TestComponent = class TestClassComponent extends Component<ComponentInterfaces['completeProps'], ComponentInterfaces['InternalState']> {
+class TestComponent extends Component<ComponentInterfaces['completeProps'], ComponentInterfaces['InternalState']> {
   constructor(props: ComponentInterfaces['completeProps']) {
     super(props);
     this.state = Shapper.obj.builder()
@@ -108,9 +108,8 @@ const TestComponent = class TestClassComponent extends Component<ComponentInterf
 
     this.props.setProp3(['1', '2', '3']);
 
-    if (Shapper.obj.wasObjectDeclaredWith(this.props, [FlagsToTest.flagC])) {
-      this.props.setAddedInC({ test: '123' });
-    }
+    const { setAddedInC } = Shapper.softConcrete(this.props, FlagsToTest.flagC) || {};
+    setAddedInC?.({ test: '123' });
 
     /*
     if (Shapper.obj.wasObjectDeclaredWith(this.props, [FlagsToTest.flagB, FlagsToTest.flagA])) {
@@ -174,19 +173,60 @@ export const A = (_props: ComponentInterfaces['ExternalProps']) => {
     on(FlagsToTest.flagB).use(20),
   ]));
 
-  return <TestFlaggedComponent
-    flagToUse={[FlagsToTest.flagB]}
-    prop1="overridedIn2"
-    prop2="overridedIn2"
-    prop3="overridedIn2"
-    prop_for_2="newProp"
-  >
+  const { prop_for_1 } = Shapper.softConcrete(_props, FlagsToTest.flagA) || {};
+  const { prop_for_2 } = Shapper.softConcrete(_props, FlagsToTest.flagB) || {};
+
+  return <div>
     <div>
-      <div>
-        <div>
-          <span> WOWWWWWWWW, {state} </span>
-        </div>
-      </div>
+      <Shapper.jsx.Toggle
+        flags={FlagsToTest.flagB}
+        on={
+          <span>{prop_for_2}</span>
+        }
+        off={
+          <Shapper.jsx.RenderIn flags={FlagsToTest.flagA}>
+            <span>{prop_for_1}</span>
+          </Shapper.jsx.RenderIn>
+        }
+      />
     </div>
-  </TestFlaggedComponent>;
+  </div>;
+};
+
+/* const B = ({ children }: { children: typeof A }) => {
+  return <div>
+    {children}
+  </div>;
+}; */
+
+const C = () => {
+  return <div>
+    <div>
+      <Shapper.jsx.UnRenderIn flagToUse={FlagsToTest.flagC}>
+        <Shapper.jsx.RenderIn
+          flags={[FlagsToTest.flagA, FlagsToTest.flagB]}
+          component={A}
+          props={{
+            prop1: 'overridedIn2',
+            prop2: 'overridedIn2',
+            prop3: 'overridedIn2',
+            prop_for_1: 'newProp',
+            prop_for_2: 'newProp',
+          }}
+        />
+      </Shapper.jsx.UnRenderIn>
+      <Shapper.jsx.UnRenderIn flagToUse={[FlagsToTest.flagA, FlagsToTest.flagB]}>
+        <A
+          prop1="1"
+          prop2={1}
+          prop3={null}
+        />
+      </Shapper.jsx.UnRenderIn>
+      <Shapper.jsx.UnRenderIn flagToUse={FlagsToTest.flagA}>
+        <div>
+          old content in A;
+        </div>
+      </Shapper.jsx.UnRenderIn>
+    </div>
+  </div>;
 };

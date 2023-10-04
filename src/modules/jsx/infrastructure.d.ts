@@ -1,9 +1,21 @@
-import { JSXElementConstructor } from 'react';
+import { JSXElementConstructor, PropsWithChildren, ReactNode } from 'react';
+import { AnyObject } from 'readable-types';
 
+import { ApplyFlagsOnType } from '../RootFlagger/app';
 import { BaseFlagger } from '../shared/BaseFlagger/app';
 
 import { AllowedFlags, IConfig } from '../shared/domain/interfaces';
 
 export declare class FlagShaperJSX<Flag extends AllowedFlags, Config extends IConfig> extends BaseFlagger<Flag, Config> {
+  Toggle(props: { flags: Flag | Flag[]; on: JSX.Element; off: JSX.Element }): JSX.Element;
+
+  RenderIn(props: { flags: Flag | Flag[]; children: ReactNode }): JSX.Element | null;
+  RenderIn<F extends [Flag, ...Flag[]], P extends AnyObject>(props: {
+    flags: F;
+    component: JSXElementConstructor<P>;
+    props: ApplyFlagsOnType<{ config: Config }, P, F>;
+  }): JSX.Element | null;
+
+  UnRenderIn(props: PropsWithChildren<{ [_ in Config['keyForOverwrites']]: Flag | Flag[] }>): JSX.Element | null;
   enableComponentIn<T>(flag: Flag | Flag[], component: JSXElementConstructor<T>): JSXElementConstructor<T>;
 }

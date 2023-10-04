@@ -24,12 +24,19 @@ export class FlagShaper extends BaseFlagger {
     this.rx = this.redux;
   }
 
-  concrete(state, flags) {
+  concrete(obj, flags) {
     if (!this.validator.allFlagsAreEnabled(flags)) {
       const flagsString = [flags].flat().join(', ');
       throw new Error(`You are trying to concrete an object with [${flagsString}], but these are not enabled`);
     }
-    return state;
+    return obj;
+  }
+
+  softConcrete(obj, flags) {
+    if (!this.validator.allFlagsAreEnabled(flags)) {
+      return;
+    }
+    return obj;
   }
 
   getValueByFlag(init, over) {

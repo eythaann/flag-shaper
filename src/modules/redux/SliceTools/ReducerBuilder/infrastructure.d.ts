@@ -15,7 +15,7 @@ export declare class CaseReducerBuilder<
   FlagType extends AllowedFlags,
   Config extends IConfig,
   CaseReducers extends nLengthTuple<[FlagType | FlagType[], AnyObject]> = [],
-  DefaultCase = undefined,
+  DefaultCase = () => void,
 > extends BaseFlagger<FlagType, Config> {
   /** When flags added to cases are not enabled ejecute default reducer */
   setDefault<T extends reducerCallback<State, [], Config['keyForOverwrites']>>(reducer: T): CaseReducerBuilder<State, FlagType, Config, CaseReducers, T>;

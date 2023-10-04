@@ -1,5 +1,7 @@
 import { AnyObject, If, IsUndefined, IsUnknown, IteratorHKT, Modify, ModifyByKeyPlusOrderedCombinations, NonUndefined, Or, TupleIncludes, TupleReduceHKT } from 'readable-types';
 
+import { CreateFlaggedInterface } from '../RootFlagger/app';
+
 import { IConfig, Metadata, MetadataKey } from '../shared/domain/interfaces';
 
 export interface ConfigToConnect {
@@ -38,19 +40,20 @@ interface testR1 extends IteratorHKT.Tuple<[string, AnyObject], [string, AnyObje
 
 type DefaultValue<T, Default> = If<Or<[IsUnknown<T>, IsUndefined<T>]>, Default, T>;
 
-export interface MagnifigThing<
+export type MagnifigThing<
   Shapper extends { config: IConfig },
   T extends ConfigToConnect,
   Key extends string = Shapper['config']['keyForOverwrites']
-> {
+> = {
   [MetadataKey]: T;
 
-  ExternalProps: ModifyByKeyPlusOrderedCombinations<T['props'], NonUndefined<T['propsOverwrites']>, Key>;
+  ExternalProps: CreateFlaggedInterface<Shapper, T['props'], NonUndefined<T['propsOverwrites']>>;
   InternalState: ModifyByKeyPlusOrderedCombinations<T['internalState'], NonUndefined<T['internalStateOverwrites']>, Key>;
   ReduxStateProps: ModifyByKeyPlusOrderedCombinations<T['stateProps'], NonUndefined<T['statePropsOverwrites']>, Key>;
   ReduxDispatchProps: ModifyByKeyPlusOrderedCombinations<T['dispatchProps'], NonUndefined<T['dispatchPropsOverwrites']>, Key>;
 
-  completeProps: ModifyByKeyPlusOrderedCombinations<
+  completeProps: CreateFlaggedInterface<
+  Shapper,
   Modify<Modify<T['props'], T['stateProps']>, T['dispatchProps']>,
   // @ts-ignore
   TupleReduceHKT<[
@@ -58,7 +61,6 @@ export interface MagnifigThing<
     ...DefaultValue<T['propsOverwrites'], []>,
     ...DefaultValue<T['statePropsOverwrites'], []>,
     ...DefaultValue<T['dispatchPropsOverwrites'], []>,
-  ], testR1>,
-  Key
+  ], testR1>
   >;
-}
+};

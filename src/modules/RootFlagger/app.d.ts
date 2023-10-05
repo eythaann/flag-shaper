@@ -11,15 +11,15 @@ import {
   TupleReduceHKT,
 } from 'readable-types';
 
+import { DUnionKey } from '../shared/domain/constants';
 import { IConfig, Metadata, MetadataKey } from '../shared/domain/interfaces';
 
 type __ExtractByFlags<
   T,
   Flags extends [string, ...string[]] | [],
-  KeyToDiscriminate extends string,
 > = {
-  [Key in keyof T as Key extends KeyToDiscriminate ? never : Key]: IsStrictObject<T[Key]> extends true
-    ? ApplyFlagsOnType<{ config: { keyForOverwrites: KeyToDiscriminate } }, Cast<T[Key], AnyObject>, Flags>
+  [Key in keyof T as Key extends DUnionKey ? never : Key]: IsStrictObject<T[Key]> extends true
+    ? ApplyFlagsOnType<Cast<T[Key], AnyObject>, Flags>
     : T[Key]
 };
 
@@ -29,19 +29,18 @@ interface ReduceFlags<FlagsOnObject> extends IteratorHKT.Tuple {
 }
 
 type _ExtractByFlags<
-  T extends Metadata<{ types: { [_ in KeyToDiscriminate]?: unknown[] } }>,
+  T extends Metadata<{ types: { [DUnionKey]?: unknown[] } }>,
   Flags extends [string, ...string[]] | [],
-  KeyToDiscriminate extends string,
-  FilteredFlags = TupleReduceHKT<Flags, ReduceFlags< NonUndefined<NonUndefined<T[MetadataKey]>['types'][KeyToDiscriminate]>[number] > >,
+
+  FilteredFlags = TupleReduceHKT<Flags, ReduceFlags< NonUndefined<NonUndefined<T[MetadataKey]>['types'][DUnionKey]>[number] > >,
 
 > = HasProperty<T, MetadataKey> extends false
-  ? __ExtractByFlags<T, Flags, KeyToDiscriminate>
+  ? __ExtractByFlags<T, Flags>
   : Prettify<__ExtractByFlags<
   Extract< NonUndefined<T[MetadataKey]>['types'], FilteredFlags extends []
-    ? { [_ in KeyToDiscriminate]?: undefined }
-    : { [_ in KeyToDiscriminate]: FilteredFlags } >,
-  Flags,
-  KeyToDiscriminate
+    ? { [DUnionKey]?: undefined }
+    : { [DUnionKey]: FilteredFlags } >,
+  Flags
   >> & Metadata<T[MetadataKey]>;
 
 /**
@@ -53,10 +52,9 @@ type _ExtractByFlags<
  *
  */
 export type ApplyFlagsOnType<
-  Shapper extends { config: { keyForOverwrites: string } },
   Type extends AnyObject,
   Flags extends [string, ...string[]] | [],
-> = _ExtractByFlags<Type, Flags, Shapper['config']['keyForOverwrites']>;
+> = _ExtractByFlags<Type, Flags>;
 
 /**
  *
@@ -67,9 +65,16 @@ export type ApplyFlagsOnType<
  *
  */
 export type CreateFlaggedInterface<
-  Shapper extends { config: IConfig },
   TypeBeforeFlags,
   Overwrittes extends nLengthTuple<[string, AnyObject]>,
 > = Prettify<TypeBeforeFlags> & Metadata<{
-  types: ModifyByKeyPlusOrderedCombinations<TypeBeforeFlags, Overwrittes, Shapper['config']['keyForOverwrites']>;
+  types: ModifyByKeyPlusOrderedCombinations<TypeBeforeFlags, Overwrittes, DUnionKey>;
 }>;
+
+/**
+ *
+ *
+ *
+ */
+export type HiddenToExplicit<T extends Metadata<{ types: unknown }>> = NonUndefined<T[MetadataKey]>['types'];
+export type ExplicitToHidden<T> = Metadata<{ types: T }>;

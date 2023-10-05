@@ -11,7 +11,7 @@
     "lint:fix": "eslint \"./src/**/*.{ts,tsx}\" --max-warnings 0 --fix",
     "typeChecking": "tsc"
   },
-  "author": "",
+  "author": "eythaann",
   "license": "MIT",
   "dependencies": {
     "readable-types": "^1.2.0",

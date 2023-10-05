@@ -29,4 +29,4 @@ export const Shapper = new FlagShaper((feature: FlagsToTest) => {
 export type MyOverwriteByFlag<
   Obj extends AnyObject,
   Over extends [[FlagsToTest, AnyObject], ...[FlagsToTest, AnyObject][]]
-> = CreateFlaggedInterface<Shapper, Obj, Over>;
+> = CreateFlaggedInterface<Obj, Over>;

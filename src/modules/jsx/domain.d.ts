@@ -2,6 +2,7 @@ import { AnyObject, If, IsUndefined, IsUnknown, IteratorHKT, Modify, ModifyByKey
 
 import { CreateFlaggedInterface } from '../RootFlagger/app';
 
+import { DUnionKey } from '../shared/domain/constants';
 import { IConfig, Metadata, MetadataKey } from '../shared/domain/interfaces';
 
 export interface ConfigToConnect {
@@ -43,17 +44,16 @@ type DefaultValue<T, Default> = If<Or<[IsUnknown<T>, IsUndefined<T>]>, Default, 
 export type MagnifigThing<
   Shapper extends { config: IConfig },
   T extends ConfigToConnect,
-  Key extends string = Shapper['config']['keyForOverwrites']
 > = {
   [MetadataKey]: T;
 
-  ExternalProps: CreateFlaggedInterface<Shapper, T['props'], NonUndefined<T['propsOverwrites']>>;
-  InternalState: ModifyByKeyPlusOrderedCombinations<T['internalState'], NonUndefined<T['internalStateOverwrites']>, Key>;
-  ReduxStateProps: ModifyByKeyPlusOrderedCombinations<T['stateProps'], NonUndefined<T['statePropsOverwrites']>, Key>;
-  ReduxDispatchProps: ModifyByKeyPlusOrderedCombinations<T['dispatchProps'], NonUndefined<T['dispatchPropsOverwrites']>, Key>;
+  ExternalProps: CreateFlaggedInterface<T['props'], NonUndefined<T['propsOverwrites']>>;
+  OwnProps: ModifyByKeyPlusOrderedCombinations<T['props'], NonUndefined<T['propsOverwrites']>, DUnionKey>;
+  InternalState: ModifyByKeyPlusOrderedCombinations<T['internalState'], NonUndefined<T['internalStateOverwrites']>, DUnionKey>;
+  ReduxStateProps: ModifyByKeyPlusOrderedCombinations<T['stateProps'], NonUndefined<T['statePropsOverwrites']>, DUnionKey>;
+  ReduxDispatchProps: ModifyByKeyPlusOrderedCombinations<T['dispatchProps'], NonUndefined<T['dispatchPropsOverwrites']>, DUnionKey>;
 
-  completeProps: CreateFlaggedInterface<
-  Shapper,
+  completeProps: ModifyByKeyPlusOrderedCombinations<
   Modify<Modify<T['props'], T['stateProps']>, T['dispatchProps']>,
   // @ts-ignore
   TupleReduceHKT<[
@@ -61,6 +61,7 @@ export type MagnifigThing<
     ...DefaultValue<T['propsOverwrites'], []>,
     ...DefaultValue<T['statePropsOverwrites'], []>,
     ...DefaultValue<T['dispatchPropsOverwrites'], []>,
-  ], testR1>
+  ], testR1>,
+  DUnionKey
   >;
 };

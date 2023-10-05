@@ -4,6 +4,7 @@ import { AnyObject, IsNever, Modify, NoInfer } from 'readable-types';
 
 import { CaseReducerBuilder } from './ReducerBuilder/infrastructure';
 
+import { HiddenToExplicit } from '../../RootFlagger/app';
 import { BaseFlagger } from '../../shared/BaseFlagger/app';
 import { reducerCallback } from './ReducerBuilder/app';
 
@@ -61,39 +62,16 @@ type CaseReducerActions<CaseReducers extends SliceCaseReducers<any>, SliceName e
 export declare class SliceTools<State extends AnyObject, Flag extends AllowedFlags, Config extends IConfig> extends BaseFlagger<Flag, Config> {
   createSlice<_S, R extends SliceCaseReducers<any>, Name extends string>(opt: {
     name: Name;
-    initialState: any | (() => any);
+    initialState: HiddenToExplicit<State> | (() => HiddenToExplicit<State>);
     reducers: ValidateSliceCaseReducers<any, R>;
     extraReducers?: (builder: ActionReducerMapBuilder<any>) => void;
   }): Modify<Slice<any, R, Name>, {
     actions: CaseReducerActions<R, Name>;
   }>;
 
-  reducerByFlag<flag extends Flag, reducer extends reducerCallback<State, [flag], Config['keyForOverwrites']>>(flag: flag, reducer: reducer): NoInfer<reducer>;
+  reducerByFlag<flag extends Flag, reducer extends reducerCallback<State, [flag]>>(flag: flag, reducer: reducer): NoInfer<reducer>;
 
-  reducerByFlag<flags extends [Flag, ...Flag[]], reducer extends reducerCallback<State, flags, Config['keyForOverwrites']>>(flags: flags, reducer: reducer): NoInfer<reducer>;
-
-  /**
-   * In this case reducerByFlag will return a function that on ejecution will select
-   * one of the functions in the map, imagine map as a tree that will be searched from
-   * left to right, in this case is from down to top, so the last keys will be checket first,
-   * this is important if you are making logic with many flags.
-   * @param cases
-   *
-   * @example
-   * // in this case the first trigger to check will be flagB and flagA, if flagA is not enable
-   * // will ejecute default on flagB, if flagB not is enabled will check only for flagA and
-   * // if it not is enabled will trigger the default fn if exist
-   * // (default is optional if do not match any fn when reducer is call just nothing will happen)
-   * const obj = {
-   *    default: fn,
-   *    flagA: fn,
-   *    flagB: {
-   *      default: fn,
-   *      flagA: fn,
-   *    }
-   * }
-   */
-  // reducerByFlag<T extends ReducersObject<State, Flag, [], Config['keyForOverwrites']>>(cases: T): TestExtract<T>;
+  reducerByFlag<flags extends [Flag, ...Flag[]], reducer extends reducerCallback<State, flags>>(flags: flags, reducer: reducer): NoInfer<reducer>;
 
   reducerBuilder(): CaseReducerBuilder<State, Flag, Config>;
 }

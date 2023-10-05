@@ -2,6 +2,7 @@ import { AnyObject, IsFunction, IteratorHKT, ModifyByKeyPlusOrderedCombinations,
 
 import { BaseFlagger } from '../../shared/BaseFlagger/app';
 
+import { DUnionKey } from '../../shared/domain/constants';
 import { AllowedFlags, IConfig } from '../../shared/domain/interfaces';
 
 interface FnToObj extends IteratorHKT.Tuple<[string, AnyObject]> {
@@ -52,5 +53,5 @@ export declare class ObjectBuilder<
   >(): this;
   */
 
-  build(config?: { forState?: boolean; forDispatch?: boolean }): {} & Prettify<ModifyByKeyPlusOrderedCombinations<ObjToApply, OverFnToOverObj<Over>, Config['keyForOverwrites']>>;
+  build(config?: { forState?: boolean; forDispatch?: boolean }): {} & Prettify<ModifyByKeyPlusOrderedCombinations<ObjToApply, OverFnToOverObj<Over>, DUnionKey>>;
 }

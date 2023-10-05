@@ -1,7 +1,9 @@
-export type customExtract<T, F, K extends string> = F extends []
-  ? Extract<T, { [_ in K]?: undefined }>
+import { DUnionKey } from '../shared/domain/constants';
+
+export type customExtract<T, F> = F extends []
+  ? Extract<T, { [DUnionKey]?: undefined }>
   : T extends T
-    ? _RT.ForceExtract<F, number> extends NonUnknow<_RT.ForceExtract<_RT.ForceExtract<T, K>, number>>
+    ? _RT.ForceExtract<F, number> extends NonUnknow<_RT.ForceExtract<_RT.ForceExtract<T, DUnionKey>, number>>
       ? T
       : never
     : never;

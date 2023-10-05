@@ -124,7 +124,7 @@ class TestComponent extends Component<ComponentInterfaces['completeProps'], Comp
   }
 };
 
-const mapStateToProps = (state: ReduxStateType, ownProps: ComponentInterfaces['ExternalProps']) => {
+const mapStateToProps = (state: ReduxStateType, ownProps: ComponentInterfaces['OwnProps']) => {
   //
   // ...some code
   //
@@ -133,9 +133,12 @@ const mapStateToProps = (state: ReduxStateType, ownProps: ComponentInterfaces['E
     .setObjToOverwrite({
       stateToProp1: selectTest1(state),
     })
-    .addCase(FlagsToTest.flagB, {
-      stateToProp1: ['123'],
-      stateToProp2: '123',
+    .addCase(FlagsToTest.flagB, () => {
+      const stateA = Shapper.concrete(state, FlagsToTest.flagB);
+      return {
+        stateToProp1: ['123'],
+        stateToProp2: '123',
+      };
     })
     .addCase(FlagsToTest.flagC, () => {
       const concreteState = Shapper.concrete(state, [FlagsToTest.flagC]);
@@ -167,7 +170,7 @@ const TestFlaggedComponent = Shapper.redux.connect<ComponentInterfaces>(mapState
 // ==================================================
 // ==================================================
 
-export const A = (_props: ComponentInterfaces['ExternalProps']) => {
+export const A = (_props: ComponentInterfaces['OwnProps']) => {
   const [state, setState] = useState(Shapper.getValueByFlag(0, [
     on(FlagsToTest.flagA).use(5),
     on(FlagsToTest.flagB).use(20),

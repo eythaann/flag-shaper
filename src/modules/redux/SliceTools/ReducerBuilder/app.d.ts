@@ -6,6 +6,5 @@ import { ApplyFlagsOnType } from '../../../RootFlagger/app';
 export type reducerCallback<
   _state extends AnyObject,
   keys extends [string, ...string[]] | [],
-  KeyToDiscriminate extends string,
-  State = ApplyFlagsOnType<{ config: { keyForOverwrites: KeyToDiscriminate } }, _state, keys>
+  State = ApplyFlagsOnType<_state, keys>
 > = CaseReducer<State, PayloadAction<any>> | CaseReducerWithPrepare<State, PayloadAction<any, string, any, any>>;

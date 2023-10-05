@@ -1,11 +1,14 @@
 import { cloneDeep } from '../../shared/app/utils';
-import { BaseFlagger } from '../../shared/BaseFlagger/app';;
+import { BaseFlagger } from '../../shared/BaseFlagger/app';
+
+import { DUnionKey, DUnionKeyConnectedDispatch, DUnionKeyConnectedState } from '../../shared/domain/constants';
+
 export class ObjectBuilder extends BaseFlagger {
   _overrides = [];
   _objToApply = {};
 
-  addCase(flag, x) {
-    this._overrides.push([flag, x]);
+  addCase(flag, override) {
+    this._overrides.push([flag, override]);
     return this;
   }
 
@@ -24,8 +27,16 @@ export class ObjectBuilder extends BaseFlagger {
 
   build({ forState = false, forDispatch = false } = {}) {
     const newObject = cloneDeep(this._objToApply);
-    const dispatchPostfix = forDispatch ? '_dispatch' : '';
-    const keyToAddFlags = `${this.config.keyForOverwrites}${forState ? '_state' : dispatchPostfix}`;
+
+    let keyToAddFlags = DUnionKey;
+
+    if (forState) {
+      keyToAddFlags = DUnionKeyConnectedState;
+    }
+
+    if (forDispatch) {
+      keyToAddFlags = DUnionKeyConnectedDispatch;
+    }
 
     this._overrides.forEach(([flag, override]) => {
       if (!this.validator.isFlagEnabled(flag)) {

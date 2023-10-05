@@ -34,11 +34,11 @@ export declare class FlagShaper<Flag extends AllowedFlags = string, Config exten
 
   public constructor(isFlagEnabled: FlagCheckerFn<Flag>, config: Readonly<Config>);
 
-  public concrete<S extends AnyObject, F extends Flag>(obj: S, flag: F): ApplyFlagsOnType<{ config: Config }, S, [F]>;
-  public concrete<S extends AnyObject, F extends [Flag, ...Flag[]]>(obj: S, flags: F): ApplyFlagsOnType<{ config: Config }, S, F>;
+  public concrete<S extends AnyObject, F extends Flag>(obj: S, flag: F): ApplyFlagsOnType<S, [F]>;
+  public concrete<S extends AnyObject, F extends [Flag, ...Flag[]]>(obj: S, flags: F): ApplyFlagsOnType<S, F>;
 
-  public softConcrete<S extends AnyObject, F extends Flag>(obj: S, flag: F): ApplyFlagsOnType<{ config: Config }, S, [F]> | undefined;
-  public softConcrete<S extends AnyObject, F extends [Flag, ...Flag[]]>(obj: S, flags: F): ApplyFlagsOnType<{ config: Config }, S, F> | undefined;
+  public softConcrete<S extends AnyObject, F extends Flag>(obj: S, flag: F): ApplyFlagsOnType<S, [F]> | undefined;
+  public softConcrete<S extends AnyObject, F extends [Flag, ...Flag[]]>(obj: S, flags: F): ApplyFlagsOnType<S, F> | undefined;
 
   public getValueByFlag<T, Over extends [[Flag, unknown], ...[Flag, unknown][]]>(init: T, over: Over): T | getValues<Over>;
 }

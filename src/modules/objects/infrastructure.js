@@ -2,15 +2,17 @@ import { ObjectBuilder } from './builder/infrastructure';
 
 import { BaseFlagger } from '../shared/BaseFlagger/app';
 
+import { DUnionKey, DUnionKeyConnectedDispatch, DUnionKeyConnectedState } from '../shared/domain/constants';
+
 export class FlagShaperForObjects extends BaseFlagger {
   builder() {
     return new ObjectBuilder(this.validator, this.config);
   };
 
   wasObjectDeclaredWith(obj, flags) {
-    const objHasFlags = !!obj[this.config.keyForOverwrites]
-    || !!obj[`${this.config.keyForOverwrites}_state`]
-    || !!obj[`${this.config.keyForOverwrites}_dispatch`];
+    const objHasFlags = !!obj[DUnionKey]
+    || !!obj[DUnionKeyConnectedState]
+    || !!obj[DUnionKeyConnectedDispatch];
 
     if (flags.length === 0) {
       return !objHasFlags;
@@ -21,9 +23,9 @@ export class FlagShaperForObjects extends BaseFlagger {
     }
 
     const flagsOnObj = new Set();
-    (obj[this.config.keyForOverwrites] || []).forEach((element) => flagsOnObj.add(element));
-    (obj[`${this.config.keyForOverwrites}_state`] || []).forEach((element) => flagsOnObj.add(element));
-    (obj[`${this.config.keyForOverwrites}_dispatch`] || []).forEach((element) => flagsOnObj.add(element));
+    (obj[DUnionKey] || []).forEach((element) => flagsOnObj.add(element));
+    (obj[DUnionKeyConnectedState] || []).forEach((element) => flagsOnObj.add(element));
+    (obj[DUnionKeyConnectedDispatch] || []).forEach((element) => flagsOnObj.add(element));
 
     return flags.every((flag) => flagsOnObj.has(flag));
   }

@@ -49,7 +49,7 @@ export declare class ObjectBuilder<
       ? any
       : { Ups: 'You\'re actual config to build will not create the extected type' },
     TypeInMetadata = _RT.ForceExtract<NonUndefined<_RT.ForceExtract<T, '__metadata'>>, 'types'>,
-    TypeOnBuild = ModifyByKeyPlusOrderedCombinations<ObjToApply, OverFnToOverObj<Over>, Config['keyForOverwrites']>,
+    TypeOnBuild = ModifyByKeyPlusOrderedCombinations<ObjToApply, OverFnToOverObj<Over>, DUnionKey>,
   >(): this;
   */
 

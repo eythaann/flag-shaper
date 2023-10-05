@@ -13,7 +13,7 @@ export class FlagShaperForFunctions extends BaseFlagger {
   callableIn(flag, fn) {
     return (...args) => {
       if (!this.validator.allFlagsAreEnabled(flag)) {
-        throw new Error(`${fn.name || 'anonymous'} fn() not is callable if flag not is enabled`);
+        throw new Error(`${fn.name || 'anonymous'} fn() is not callable if flags are not enabled`);
       }
       return fn(...args);
     };

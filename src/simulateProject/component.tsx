@@ -78,7 +78,7 @@ interface testjsx {
   ];
 }
 
-type ComponentInterfaces = MagnifigThing<Shapper, testjsx>;
+type ComponentInterfaces = MagnifigThing<testjsx>;
 
 class TestComponent extends Component<ComponentInterfaces['completeProps'], ComponentInterfaces['InternalState']> {
   constructor(props: ComponentInterfaces['completeProps']) {
@@ -111,14 +111,13 @@ class TestComponent extends Component<ComponentInterfaces['completeProps'], Comp
     const { setAddedInC } = Shapper.softConcrete(this.props, FlagsToTest.flagC) || {};
     setAddedInC?.({ test: '123' });
 
-    /*
     if (Shapper.obj.wasObjectDeclaredWith(this.props, [FlagsToTest.flagB, FlagsToTest.flagA])) {
-      this.props.flagToUse;
+      this.props.stateToProp2;
     }
 
     if (Shapper.obj.wasObjectDeclaredWith(this.state, [FlagsToTest.flagA])) {
       this.state.flagToUse;
-    } */
+    }
 
     return undefined;
   }
@@ -205,7 +204,7 @@ export const A = (_props: ComponentInterfaces['OwnProps']) => {
 const C = () => {
   return <div>
     <div>
-      <Shapper.jsx.UnRenderIn flagToUse={FlagsToTest.flagC}>
+      <Shapper.jsx.UnRenderIn flags={FlagsToTest.flagC}>
         <Shapper.jsx.RenderIn
           flags={[FlagsToTest.flagA, FlagsToTest.flagB]}
           component={A}
@@ -218,14 +217,14 @@ const C = () => {
           }}
         />
       </Shapper.jsx.UnRenderIn>
-      <Shapper.jsx.UnRenderIn flagToUse={[FlagsToTest.flagA, FlagsToTest.flagB]}>
+      <Shapper.jsx.UnRenderIn flags={[FlagsToTest.flagA, FlagsToTest.flagB]}>
         <A
           prop1="1"
           prop2={1}
           prop3={null}
         />
       </Shapper.jsx.UnRenderIn>
-      <Shapper.jsx.UnRenderIn flagToUse={FlagsToTest.flagA}>
+      <Shapper.jsx.UnRenderIn flags={FlagsToTest.flagA}>
         <div>
           old content in A;
         </div>

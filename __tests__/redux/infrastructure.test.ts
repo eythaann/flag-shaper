@@ -2,14 +2,10 @@ import { FlagsToTest } from '../shared/common';
 import { IProp4, ITest4, MocketState, ReduxState } from './mockets';
 import { Modify } from 'readable-types';
 
-import { FlagValidator } from 'modules/checker/infrastructure';
-import { ReduxFlagShaper } from 'modules/redux/Flagger/infrastructure';
+import { FlagValidator } from '../../src/modules/checker/infrastructure';
+import { ReduxFlagShaper } from '../../src/modules/redux/infrastructure';
 
-import { cloneDeep } from 'modules/shared/app/utils';
-import { ExtractByFlags, OverwriteByFlag } from 'modules/RootFlagger/app';
-
-import { DefaultConfig } from 'modules/shared/domain/constants';
-import { IConfig } from 'modules/shared/domain/interfaces';
+import { IConfig } from '../../src/modules/shared/domain/interfaces';
 
 class ReduxFlagShaperForTest<Config extends IConfig> extends ReduxFlagShaper<FlagsToTest, Config> {
   public readonly config: Config;

@@ -42,7 +42,6 @@ interface testR1 extends IteratorHKT.Tuple<[string, AnyObject], [string, AnyObje
 type DefaultValue<T, Default> = If<Or<[IsUnknown<T>, IsUndefined<T>]>, Default, T>;
 
 export type MagnifigThing<
-  Shapper extends { config: IConfig },
   T extends ConfigToConnect,
 > = {
   [MetadataKey]: T;

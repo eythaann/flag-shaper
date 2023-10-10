@@ -3,7 +3,7 @@ import { AnyObject, IteratorHKT, nLengthTuple, TupleReduceHKT } from 'readable-t
 import { BaseFlagger } from '../../../shared/BaseFlagger/app';
 import { reducerCallback } from './app';
 
-import { AllowedFlags, IConfig } from '../../../shared/domain/interfaces';
+import { AllowedFlags } from '../../../shared/domain/interfaces';
 
 interface ReducersToUnion extends IteratorHKT.Tuple<[unknown, AnyObject]> {
   initialAcc: never;
@@ -13,16 +13,15 @@ interface ReducersToUnion extends IteratorHKT.Tuple<[unknown, AnyObject]> {
 export declare class CaseReducerBuilder<
   State extends AnyObject,
   FlagType extends AllowedFlags,
-  Config extends IConfig,
   CaseReducers extends nLengthTuple<[FlagType | FlagType[], AnyObject]> = [],
   DefaultCase = () => void,
-> extends BaseFlagger<FlagType, Config> {
+> extends BaseFlagger<FlagType> {
   /** When flags added to cases are not enabled ejecute default reducer */
-  setDefault<T extends reducerCallback<State, []>>(reducer: T): CaseReducerBuilder<State, FlagType, Config, CaseReducers, T>;
+  setDefault<T extends reducerCallback<State, []>>(reducer: T): CaseReducerBuilder<State, FlagType, CaseReducers, T>;
   // @ts-ignore
-  addCase<flag extends FlagType, reducer extends reducerCallback<State, [flag]>>(flag: flag, reducer: reducer, forceEnableOn?: FlagType[]): CaseReducerBuilder<State, FlagType, Config, [...CaseReducers, [flag, reducer]], DefaultCase>;
+  addCase<flag extends FlagType, reducer extends reducerCallback<State, [flag]>>(flag: flag, reducer: reducer, forceEnableOn?: FlagType[]): CaseReducerBuilder<State, FlagType, [...CaseReducers, [flag, reducer]], DefaultCase>;
   // @ts-ignore
-  addCase<flags extends [FlagType, ...FlagType[]], reducer extends reducerCallback<State, flags>>(flags: flags, reducer: reducer, forceEnableOn?: FlagType[]): CaseReducerBuilder<State, FlagType, Config, [...CaseReducers, [flags, reducer]], DefaultCase>;
+  addCase<flags extends [FlagType, ...FlagType[]], reducer extends reducerCallback<State, flags>>(flags: flags, reducer: reducer, forceEnableOn?: FlagType[]): CaseReducerBuilder<State, FlagType, [...CaseReducers, [flags, reducer]], DefaultCase>;
 
   build(): DefaultCase | TupleReduceHKT<CaseReducers, ReducersToUnion>;
 }

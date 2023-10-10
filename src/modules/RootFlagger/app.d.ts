@@ -12,7 +12,7 @@ import {
 } from 'readable-types';
 
 import { DUnionKey } from '../shared/domain/constants';
-import { IConfig, Metadata, MetadataKey } from '../shared/domain/interfaces';
+import { Metadata, MetadataKey } from '../shared/domain/interfaces';
 
 type __ExtractByFlags<
   T,
@@ -67,7 +67,7 @@ export type ApplyFlagsOnType<
 export type CreateFlaggedInterface<
   TypeBeforeFlags,
   Overwrittes extends nLengthTuple<[string, AnyObject]>,
-> = Prettify<TypeBeforeFlags> & Metadata<{
+> = TypeBeforeFlags & Metadata<{
   types: ModifyByKeyPlusOrderedCombinations<TypeBeforeFlags, Overwrittes, DUnionKey>;
 }>;
 

@@ -2,8 +2,8 @@ import { AnyObject, If, IsUndefined, IsUnknown, IteratorHKT, Modify, ModifyByKey
 
 import { CreateFlaggedInterface } from '../RootFlagger/app';
 
-import { DUnionKey } from '../shared/domain/constants';
-import { IConfig, Metadata, MetadataKey } from '../shared/domain/interfaces';
+import { DUnionKey, MetadataKey } from '../shared/domain/constants';
+import { Metadata } from '../shared/domain/interfaces';
 
 export interface ConfigToConnect {
   props?: AnyObject;

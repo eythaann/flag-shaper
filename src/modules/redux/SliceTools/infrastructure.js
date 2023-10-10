@@ -4,6 +4,7 @@ import { BaseFlagger } from '../../shared/BaseFlagger/app';
 
 export class SliceTools extends BaseFlagger {
   createSlice(options) {
+    // TODO
     return this.config.createSliceFn(options);
   };
 
@@ -16,6 +17,6 @@ export class SliceTools extends BaseFlagger {
   }
 
   reducerBuilder() {
-    return new CaseReducerBuilder(validator, config);
+    return new CaseReducerBuilder(validator);
   }
 }

@@ -8,7 +8,7 @@ import { HiddenToExplicit } from '../../RootFlagger/app';
 import { BaseFlagger } from '../../shared/BaseFlagger/app';
 import { reducerCallback } from './ReducerBuilder/app';
 
-import { AllowedFlags, IConfig } from '../../shared/domain/interfaces';
+import { AllowedFlags } from '../../shared/domain/interfaces';
 
 /* type ReducersObject<
   State extends AnyObject,
@@ -59,7 +59,7 @@ type CaseReducerActions<CaseReducers extends SliceCaseReducers<any>, SliceName e
     : ActionCreatorForCaseReducer<CaseReducers[ActionName], SliceActionType<SliceName, ActionName>>
 };
 
-export declare class SliceTools<State extends AnyObject, Flag extends AllowedFlags, Config extends IConfig> extends BaseFlagger<Flag, Config> {
+export declare class SliceTools<State extends AnyObject, Flag extends AllowedFlags> extends BaseFlagger<Flag> {
   createSlice<_S, R extends SliceCaseReducers<any>, Name extends string>(opt: {
     name: Name;
     initialState: HiddenToExplicit<State> | (() => HiddenToExplicit<State>);
@@ -73,5 +73,5 @@ export declare class SliceTools<State extends AnyObject, Flag extends AllowedFla
 
   reducerByFlag<flags extends [Flag, ...Flag[]], reducer extends reducerCallback<State, flags>>(flags: flags, reducer: reducer): NoInfer<reducer>;
 
-  reducerBuilder(): CaseReducerBuilder<State, Flag, Config>;
+  reducerBuilder(): CaseReducerBuilder<State, Flag>;
 }

@@ -1,13 +1,11 @@
-import { FlagsToTest } from '../../__tests__/shared/common';
+import { FlagsToTest } from '../shared/common';
 import { Shapper } from './initFlagger';
 import { selectAddedInC, selectTest1 } from './selectors';
 import { actions } from './slice';
 import { ReduxStateType } from './state';
-import React, { Component, useState } from 'react';
+import { Component } from 'react';
 
-import { on } from '../modules/helpers/app';
-
-import { MagnifigThing } from '../modules/jsx/domain';
+import { MagnifigThing } from '../../src/modules/jsx/domain';
 
 interface IProps {
   prop1: '1';
@@ -133,7 +131,7 @@ const mapStateToProps = (state: ReduxStateType, ownProps: ComponentInterfaces['O
       stateToProp1: selectTest1(state),
     })
     .addCase(FlagsToTest.flagB, () => {
-      const stateA = Shapper.concrete(state, FlagsToTest.flagB);
+      const concreteState = Shapper.concrete(state, FlagsToTest.flagB);
       return {
         stateToProp1: ['123'],
         stateToProp2: '123',
@@ -141,7 +139,6 @@ const mapStateToProps = (state: ReduxStateType, ownProps: ComponentInterfaces['O
     })
     .addCase(FlagsToTest.flagC, () => {
       const concreteState = Shapper.concrete(state, [FlagsToTest.flagC]);
-
       return {
         addedInC: selectAddedInC(concreteState),
       };
@@ -158,77 +155,4 @@ const mapDispatchToProps = Shapper.obj.builder()
   })
   .build({ forDispatch: true });
 
-const TestFlaggedComponent = Shapper.redux.connect<ComponentInterfaces>(mapStateToProps, mapDispatchToProps)(TestComponent);
-
-// ==================================================
-// ==================================================
-// ==================================================
-// ==================================================
-// ==================================================
-// ==================================================
-// ==================================================
-// ==================================================
-
-export const A = (_props: ComponentInterfaces['OwnProps']) => {
-  const [state, setState] = useState(Shapper.getValueByFlag(0, [
-    on(FlagsToTest.flagA).use(5),
-    on(FlagsToTest.flagB).use(20),
-  ]));
-
-  const { prop_for_1 } = Shapper.softConcrete(_props, FlagsToTest.flagA) || {};
-  const { prop_for_2 } = Shapper.softConcrete(_props, FlagsToTest.flagB) || {};
-
-  return <div>
-    <div>
-      <Shapper.jsx.Toggle
-        flags={FlagsToTest.flagB}
-        on={
-          <span>{prop_for_2}</span>
-        }
-        off={
-          <Shapper.jsx.RenderIn flags={FlagsToTest.flagA}>
-            <span>{prop_for_1}</span>
-          </Shapper.jsx.RenderIn>
-        }
-      />
-    </div>
-  </div>;
-};
-
-/* const B = ({ children }: { children: typeof A }) => {
-  return <div>
-    {children}
-  </div>;
-}; */
-
-const C = () => {
-  return <div>
-    <div>
-      <Shapper.jsx.UnRenderIn flags={FlagsToTest.flagC}>
-        <Shapper.jsx.RenderIn
-          flags={[FlagsToTest.flagA, FlagsToTest.flagB]}
-          component={A}
-          props={{
-            prop1: 'overridedIn2',
-            prop2: 'overridedIn2',
-            prop3: 'overridedIn2',
-            prop_for_1: 'newProp',
-            prop_for_2: 'newProp',
-          }}
-        />
-      </Shapper.jsx.UnRenderIn>
-      <Shapper.jsx.UnRenderIn flags={[FlagsToTest.flagA, FlagsToTest.flagB]}>
-        <A
-          prop1="1"
-          prop2={1}
-          prop3={null}
-        />
-      </Shapper.jsx.UnRenderIn>
-      <Shapper.jsx.UnRenderIn flags={FlagsToTest.flagA}>
-        <div>
-          old content in A;
-        </div>
-      </Shapper.jsx.UnRenderIn>
-    </div>
-  </div>;
-};
+export const FlaggedClassComponent = Shapper.redux.connect<ComponentInterfaces>(mapStateToProps, mapDispatchToProps)(TestComponent);

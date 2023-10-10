@@ -4,10 +4,10 @@ import { BaseFlagger } from '../shared/BaseFlagger/app';
 import { customExtract } from './app';
 
 import { DUnionKey } from '../shared/domain/constants';
-import { AllowedFlags, IConfig } from '../shared/domain/interfaces';
+import { AllowedFlags } from '../shared/domain/interfaces';
 
-export declare class FlagShaperForObjects<Flag extends AllowedFlags, Config extends IConfig> extends BaseFlagger<Flag, Config> {
-  public builder(): ObjectBuilder<Flag, Config>;
+export declare class FlagShaperForObjects<Flag extends AllowedFlags> extends BaseFlagger<Flag> {
+  public builder(): ObjectBuilder<Flag>;
 
   public wasObjectDeclaredWith<
     Obj extends { [DUnionKey]?: AllowedFlags[] },

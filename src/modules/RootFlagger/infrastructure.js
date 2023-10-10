@@ -7,13 +7,11 @@ import { ReduxFlagShaper } from '../redux/infrastructure';
 
 import { BaseFlagger } from '../shared/BaseFlagger/app';
 
-import { DefaultConfig } from '../shared/domain/constants';
-
 export class FlagShaper extends BaseFlagger {
-  constructor(isFlagEnabled, config = DefaultConfig) {
-    super(new FlagValidator(isFlagEnabled), config);
+  constructor(isFlagEnabled) {
+    super(new FlagValidator(isFlagEnabled));
 
-    const args = [this.validator, this.config];
+    const args = [this.validator];
 
     this.fn = new FlagShaperForFunctions(...args);
     this.obj = new FlagShaperForObjects(...args);

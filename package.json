@@ -9,7 +9,7 @@
     "test": "jest",
     "lint": "eslint \"./src/**/*.{ts,tsx}\" --max-warnings 0",
     "lint:fix": "eslint \"./src/**/*.{ts,tsx}\" --max-warnings 0 --fix",
-    "typeChecking": "tsc"
+    "debugTypes": "tsc --extendedDiagnostics"
   },
   "author": "eythaann",
   "license": "MIT",

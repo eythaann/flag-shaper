@@ -4,9 +4,9 @@ import { AnyObject } from 'readable-types';
 import { ApplyFlagsOnType } from '../RootFlagger/app';
 import { BaseFlagger } from '../shared/BaseFlagger/app';
 
-import { AllowedFlags, IConfig } from '../shared/domain/interfaces';
+import { AllowedFlags } from '../shared/domain/interfaces';
 
-export declare class FlagShaperJSX<Flag extends AllowedFlags, Config extends IConfig> extends BaseFlagger<Flag, Config> {
+export declare class FlagShaperJSX<Flag extends AllowedFlags> extends BaseFlagger<Flag> {
   Toggle(props: { flags: Flag | Flag[]; on: JSX.Element; off: JSX.Element }): JSX.Element;
 
   RenderIn(props: { flags: Flag | Flag[]; children: ReactNode }): JSX.Element | null;

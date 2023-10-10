@@ -6,8 +6,7 @@
     
     "noImplicitReturns": true,
     "noImplicitThis": true,
-    "strictNullChecks": true,
-    "strictFunctionTypes": true,
+    "strict": true,
     "noImplicitAny": true,
     "noUncheckedIndexedAccess": true,
     "noFallthroughCasesInSwitch": true,
@@ -20,9 +19,8 @@
     "incremental": true,
   },
   "include": [
-    "src"
+    "src",
+    "__tests__"
   ],
-  "exclude": [
-    "src/simulateProject"
-  ]
+  "exclude": ["node_modules"]
 }

@@ -1,8 +1,5 @@
-export declare const DefaultConfig: {
-  keyForOverwrites: 'overwrittenWith';
-  createSliceFn: () => {};
-  connectFn: () => {};
-};
+export declare const MetadataKey: unique symbol;
+export type MetadataKey = typeof MetadataKey;
 
 export declare const DUnionKey: unique symbol;
 export type DUnionKey = typeof DUnionKey;

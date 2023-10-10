@@ -2,9 +2,7 @@ import { createSlice as createSliceFn } from '@reduxjs/toolkit';
 import { connect as connectFn } from 'react-redux';
 import { AnyObject } from 'readable-types';
 
-import { FlagShaper } from '../modules/RootFlagger/infrastructure';
-
-import { CreateFlaggedInterface } from '../modules/RootFlagger/app';
+import { FlagShaper } from '../../src/modules/RootFlagger/infrastructure';
 
 export enum FlagsToTest {
   flagA = 'flagA',
@@ -25,8 +23,3 @@ export const Shapper = new FlagShaper((feature: FlagsToTest) => {
   createSliceFn: createSliceFn,
   connectFn: connectFn,
 });
-
-export type MyOverwriteByFlag<
-  Obj extends AnyObject,
-  Over extends [[FlagsToTest, AnyObject], ...[FlagsToTest, AnyObject][]]
-> = CreateFlaggedInterface<Obj, Over>;

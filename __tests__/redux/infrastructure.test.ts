@@ -5,16 +5,13 @@ import { Modify } from 'readable-types';
 import { FlagValidator } from '../../src/modules/checker/infrastructure';
 import { ReduxFlagShaper } from '../../src/modules/redux/infrastructure';
 
-import { IConfig } from '../../src/modules/shared/domain/interfaces';
-
-class ReduxFlagShaperForTest<Config extends IConfig> extends ReduxFlagShaper<FlagsToTest, Config> {
-  public readonly config: Config;
+class ReduxFlagShaperForTest extends ReduxFlagShaper<FlagsToTest> {
 }
 
 type FakeReduxFlagShaper = typeof FakeReduxFlagShaper;
 const FakeReduxFlagShaper = new ReduxFlagShaperForTest(new FlagValidator((a: FlagsToTest) => {
   return [FlagsToTest.flagA].includes(a);
-}), DefaultConfig);
+}));
 
 describe('ReduxFlagShaper', () => {
   describe('SelectorBuilder', () => {

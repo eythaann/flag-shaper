@@ -1,5 +1,6 @@
-import { FlagsToTest } from '../../__tests__/shared/common';
-import { MyOverwriteByFlag, Shapper } from './initFlagger';
+import { FlagsToTest } from '../shared/common';
+
+import { CreateFlaggedInterface } from '../../src/modules/RootFlagger/app';
 
 interface OldITestDeep {
   testDeep1: number;
@@ -7,7 +8,7 @@ interface OldITestDeep {
   testDeep3: number;
 }
 
-export type ITestDeep = MyOverwriteByFlag<OldITestDeep, [
+export type ITestDeep = CreateFlaggedInterface<OldITestDeep, [
   [FlagsToTest.flagA, { testDeep1: string }],
   [FlagsToTest.flagC, { addedInC: boolean[] }]
 ]>;
@@ -19,7 +20,7 @@ interface OldIProp4 {
   test4: ITestDeep;
 }
 
-type IProp4 = MyOverwriteByFlag<OldIProp4, [
+type IProp4 = CreateFlaggedInterface<OldIProp4, [
   [FlagsToTest.flagA, { test1: string }],
   [FlagsToTest.flagB, { test2: number }]
 ]>;
@@ -31,9 +32,9 @@ interface OldReduxState {
   prop4: IProp4;
 }
 
-export type ReduxStateType = MyOverwriteByFlag<OldReduxState, [
+export type ReduxStateType = CreateFlaggedInterface<OldReduxState, [
   [FlagsToTest.flagA, { prop3: number[] }],
   [FlagsToTest.flagB, { prop3: boolean[] }]
 ]>;
 
-export const selectorBuilder = Shapper.rx.getSelectorBuilder<ReduxStateType>();
+const T0 = {} as ReduxStateType;

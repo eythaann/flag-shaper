@@ -10,29 +10,27 @@ import { ReduxFlagShaper } from '../redux/infrastructure';
 import { BaseFlagger } from '../shared/BaseFlagger/app';
 import { ApplyFlagsOnType } from './app';
 
-import { DefaultConfig } from '../shared/domain/constants';
-import { AllowedFlags, FlagCheckerFn, IConfig } from '../shared/domain/interfaces';
+import { AllowedFlags, FlagCheckerFn } from '../shared/domain/interfaces';
 
-export declare class FlagShaper<Flag extends AllowedFlags = string, Config extends IConfig = typeof DefaultConfig> extends BaseFlagger<Flag, Config> {
+export declare class FlagShaper<Flag extends AllowedFlags = string> extends BaseFlagger<Flag> {
   public readonly validator: FlagValidator<Flag>;
-  public readonly config: Config;
 
   /** @alias function */
-  public readonly fn: FlagShaperForFunctions<Flag, Config>;
+  public readonly fn: FlagShaperForFunctions<Flag>;
 
   /** @alias object */
-  public readonly obj: FlagShaperForObjects<Flag, Config>;
+  public readonly obj: FlagShaperForObjects<Flag>;
 
   /** @alias decorator */
-  public readonly dec: FlagShaperDecorators<Flag, Config>;
+  public readonly dec: FlagShaperDecorators<Flag>;
 
   /** @alias redux */
-  public readonly rx: ReduxFlagShaper<Flag, Config>;
-  public readonly redux: ReduxFlagShaper<Flag, Config>;
+  public readonly rx: ReduxFlagShaper<Flag>;
+  public readonly redux: ReduxFlagShaper<Flag>;
 
-  public readonly jsx: FlagShaperJSX<Flag, Config>;
+  public readonly jsx: FlagShaperJSX<Flag>;
 
-  public constructor(isFlagEnabled: FlagCheckerFn<Flag>, config: Readonly<Config>);
+  public constructor(isFlagEnabled: FlagCheckerFn<Flag>);
 
   public concrete<S extends AnyObject, F extends Flag>(obj: S, flag: F): ApplyFlagsOnType<S, [F]>;
   public concrete<S extends AnyObject, F extends [Flag, ...Flag[]]>(obj: S, flags: F): ApplyFlagsOnType<S, F>;

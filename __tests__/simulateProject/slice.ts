@@ -1,21 +1,13 @@
-import { FlagsToTest } from '../../__tests__/shared/common';
+import { FlagsToTest } from '../shared/common';
 import { Shapper } from './initFlagger';
 import { ReduxStateType } from './state';
 import { PayloadAction } from '@reduxjs/toolkit';
 
-import { HiddenToExplicit } from '../modules/RootFlagger/app';
+import { HiddenToExplicit } from '../../src/modules/RootFlagger/app';
 
 const { createSlice, reducerByFlag, reducerBuilder } = Shapper.redux.getSliceTools<ReduxStateType>();
 
-const state = Shapper.obj.builder()
-  .setObjToOverwrite({
-    testDeep1: 0,
-    testDeep2: 1,
-    testDeep3: 2,
-  })
-  .addCase(FlagsToTest.flagA, { testDeep1: 'string' })
-  .addCase(FlagsToTest.flagC, { addedInC: [true] })
-  .build();
+const state = {} as HiddenToExplicit<ReduxStateType>;
 
 const _slice = createSlice({
   name: 'test',
@@ -47,5 +39,3 @@ const _slice = createSlice({
 });
 
 export const actions = _slice.actions;
-
-actions.setProp3;

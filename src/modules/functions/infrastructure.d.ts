@@ -2,9 +2,9 @@ import { AnyFunction } from 'readable-types';
 
 import { BaseFlagger } from '../shared/BaseFlagger/app';
 
-import { AllowedFlags, IConfig } from '../shared/domain/interfaces';
+import { AllowedFlags } from '../shared/domain/interfaces';
 
-export declare class FlagShaperForFunctions<Flag extends AllowedFlags, Config extends IConfig> extends BaseFlagger<Flag, Config> {
+export declare class FlagShaperForFunctions<Flag extends AllowedFlags> extends BaseFlagger<Flag> {
   /**
    * This method returns a function that can be executed if the specified feature flag is enabled.
    * If the feature flag is not enabled, the returned function will do nothing and return `undefined`.

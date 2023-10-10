@@ -7,12 +7,12 @@ import { SliceTools } from './SliceTools/infrastructure';
 import { BaseFlagger } from '../shared/BaseFlagger/app';
 
 import { FlaggedPropsAndState } from '../jsx/domain';
-import { AllowedFlags, IConfig } from '../shared/domain/interfaces';
+import { AllowedFlags } from '../shared/domain/interfaces';
 
-export declare class ReduxFlagShaper<Flag extends AllowedFlags, Config extends IConfig> extends BaseFlagger<Flag, Config> {
+export declare class ReduxFlagShaper<Flag extends AllowedFlags> extends BaseFlagger<Flag> {
   public getSelectorBuilder<State extends AnyObject>(): SelectorBuilder<State>;
 
-  public getSliceTools<State extends AnyObject>(): SliceTools<State, Flag, Config>;
+  public getSliceTools<State extends AnyObject>(): SliceTools<State, Flag>;
 
   public connect<T extends FlaggedPropsAndState>(...args: [
     mapStateToProps: (state: any, ownProps: T['ExternalProps']) => T['ReduxStateProps'],

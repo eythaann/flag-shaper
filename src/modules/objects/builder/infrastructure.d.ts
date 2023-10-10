@@ -3,7 +3,7 @@ import { AnyObject, IsFunction, IteratorHKT, ModifyByKeyPlusOrderedCombinations,
 import { BaseFlagger } from '../../shared/BaseFlagger/app';
 
 import { DUnionKey } from '../../shared/domain/constants';
-import { AllowedFlags, IConfig } from '../../shared/domain/interfaces';
+import { AllowedFlags } from '../../shared/domain/interfaces';
 
 interface FnToObj extends IteratorHKT.Tuple<[string, AnyObject]> {
   return: [
@@ -30,18 +30,17 @@ type OverFnToOverObj<T extends unknown[]> = TupleMapHKT<T, FnToObj>;
 
 export declare class ObjectBuilder<
   Flag extends AllowedFlags,
-  Config extends IConfig,
   Over extends [Flag, AnyObject][] = [],
   ObjToApply extends AnyObject = {}
-> extends BaseFlagger<Flag, Config> {
+> extends BaseFlagger<Flag> {
   private _overrides: Over;
   private _objToApply: ObjToApply;
 
-  addCase<F extends Flag, V extends AnyObject>(flag: F, x: V): ObjectBuilder<Flag, Config, [...Over, [F, V]], ObjToApply>;
+  addCase<F extends Flag, V extends AnyObject>(flag: F, x: V): ObjectBuilder<Flag, [...Over, [F, V]], ObjToApply>;
 
   get overrides(): Over;
 
-  setObjToOverwrite<T extends AnyObject>(obj: T): ObjectBuilder<Flag, Config, Over, T>;
+  setObjToOverwrite<T extends AnyObject>(obj: T): ObjectBuilder<Flag, Over, T>;
 
   // IDEA is util but not SO util.
   /*match<

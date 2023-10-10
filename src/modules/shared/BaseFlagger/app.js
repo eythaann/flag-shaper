@@ -1,6 +1,5 @@
 export class BaseFlagger {
-  constructor(validator, config) {
+  constructor(validator) {
     this.validator = validator;
-    this.config = config;
   }
 }

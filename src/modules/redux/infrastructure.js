@@ -9,11 +9,12 @@ export class ReduxFlagShaper extends BaseFlagger {
   };
 
   getSliceTools() {
-    return new SliceTools(this.validator, this.config);
+    return new SliceTools(this.validator);
   }
 
   connect(...args) {
     return (component) => {
+      // TODO
       return this.config.connectFn(args)(component);
     };
   };

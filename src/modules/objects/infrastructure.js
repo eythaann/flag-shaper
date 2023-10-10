@@ -6,7 +6,7 @@ import { DUnionKey, DUnionKeyConnectedDispatch, DUnionKeyConnectedState } from '
 
 export class FlagShaperForObjects extends BaseFlagger {
   builder() {
-    return new ObjectBuilder(this.validator, this.config);
+    return new ObjectBuilder(this.validator);
   };
 
   wasObjectDeclaredWith(obj, flags) {

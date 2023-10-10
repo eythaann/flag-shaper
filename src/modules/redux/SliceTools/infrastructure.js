@@ -3,9 +3,14 @@ import { CaseReducerBuilder } from './ReducerBuilder/infrastructure';
 import { BaseFlagger } from '../../shared/BaseFlagger/app';
 
 export class SliceTools extends BaseFlagger {
+  constructor(validator, createSliceFn) {
+    super(validator);
+    this._createSlice = createSliceFn;
+  };
+
   createSlice(options) {
     // TODO
-    return this.config.createSliceFn(options);
+    return this._createSlice(options);
   };
 
   reducerByFlag(flags, reducer) {

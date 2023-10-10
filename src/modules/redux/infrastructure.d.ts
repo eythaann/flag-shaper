@@ -1,5 +1,5 @@
 import type { JSXElementConstructor, ReactNode } from 'react';
-import { AnyObject, Prettify } from 'readable-types';
+import { AnyFunction, AnyObject, Prettify } from 'readable-types';
 
 import { SelectorBuilder } from './SelectorBuilder/infrastructure';
 import { SliceTools } from './SliceTools/infrastructure';
@@ -10,6 +10,11 @@ import { FlaggedPropsAndState } from '../jsx/domain';
 import { AllowedFlags } from '../shared/domain/interfaces';
 
 export declare class ReduxFlagShaper<Flag extends AllowedFlags> extends BaseFlagger<Flag> {
+  private _connect: AnyFunction;
+  private _createSlice: AnyFunction;
+
+  public constructor(...args: [...args: ConstructorParameters<typeof BaseFlagger>, connectFn: AnyFunction, createSliceFn: AnyFunction]);
+
   public getSelectorBuilder<State extends AnyObject>(): SelectorBuilder<State>;
 
   public getSliceTools<State extends AnyObject>(): SliceTools<State, Flag>;

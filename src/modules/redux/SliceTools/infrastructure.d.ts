@@ -1,6 +1,6 @@
 import { ActionCreatorWithoutPayload, ActionReducerMapBuilder, PayloadAction, Slice, SliceCaseReducers, ValidateSliceCaseReducers } from '@reduxjs/toolkit';
 import { _ActionCreatorWithPreparedPayload, BaseActionCreator } from '@reduxjs/toolkit/dist/createAction';
-import { AnyObject, IsNever, Modify, NoInfer } from 'readable-types';
+import { AnyFunction, AnyObject, IsNever, Modify, NoInfer } from 'readable-types';
 
 import { CaseReducerBuilder } from './ReducerBuilder/infrastructure';
 
@@ -60,7 +60,11 @@ type CaseReducerActions<CaseReducers extends SliceCaseReducers<any>, SliceName e
 };
 
 export declare class SliceTools<State extends AnyObject, Flag extends AllowedFlags> extends BaseFlagger<Flag> {
-  createSlice<_S, R extends SliceCaseReducers<any>, Name extends string>(opt: {
+  private _createSlice: AnyFunction;
+
+  public constructor(...args: [...args: ConstructorParameters<typeof BaseFlagger>, createSliceFn: AnyFunction]);
+
+  public createSlice<_S, R extends SliceCaseReducers<any>, Name extends string>(opt: {
     name: Name;
     initialState: HiddenToExplicit<State> | (() => HiddenToExplicit<State>);
     reducers: ValidateSliceCaseReducers<any, R>;
@@ -69,9 +73,9 @@ export declare class SliceTools<State extends AnyObject, Flag extends AllowedFla
     actions: CaseReducerActions<R, Name>;
   }>;
 
-  reducerByFlag<flag extends Flag, reducer extends reducerCallback<State, [flag]>>(flag: flag, reducer: reducer): NoInfer<reducer>;
+  public reducerByFlag<flag extends Flag, reducer extends reducerCallback<State, [flag]>>(flag: flag, reducer: reducer): NoInfer<reducer>;
 
-  reducerByFlag<flags extends [Flag, ...Flag[]], reducer extends reducerCallback<State, flags>>(flags: flags, reducer: reducer): NoInfer<reducer>;
+  public reducerByFlag<flags extends [Flag, ...Flag[]], reducer extends reducerCallback<State, flags>>(flags: flags, reducer: reducer): NoInfer<reducer>;
 
-  reducerBuilder(): CaseReducerBuilder<State, Flag>;
+  public reducerBuilder(): CaseReducerBuilder<State, Flag>;
 }

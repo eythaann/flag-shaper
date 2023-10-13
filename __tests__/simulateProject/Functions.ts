@@ -1,24 +1,45 @@
-import { FlagsToTest, Shapper } from './initFlagger';
-import { Add, IsUndefined, nLengthTuple } from 'readable-types';
+import { FlagsToTest } from './initFlagger';
+import { AnyFunction, ValueOf } from 'readable-types';
 
-type FunArgsByFlag<Original extends nLengthTuple<unknown>, Overrides extends nLengthTuple<[string, unknown]>> = {
-  external: Original;
-  internal: test<Original | Overrides[number][1]>;
+import { DefaultValue } from '../../src/modules/jsx/domain';
+
+declare function funtionByFlag<
+  OriginalFn extends AnyFunction,
+  Overrides extends Record<string, AnyFunction>
+>(internalFn: (config: {
+  calledWith: string;
+  args: Parameters<ValueOf<Overrides>> | Parameters<OriginalFn>;
+}) => any): OriginalFn & {
+  callWith<F extends string, FnToCall extends AnyFunction = DefaultValue<Overrides[F], OriginalFn>>(flag: F, ...args: Parameters<FnToCall>): ReturnType<FnToCall>;
+  executeWith<F extends string, FnToCall extends AnyFunction = DefaultValue<Overrides[F], OriginalFn>>(flag: F, ...args: Parameters<FnToCall>): ReturnType<FnToCall> | undefined;
 };
 
-type test<T, I = 0, result = [], current = T[I]> = IsUndefined<current> extends true ? result : test<T, Add<I, 1>, [...result, current]>;
+//
+//
+//
+//
 
-type fnArgs = FunArgsByFlag<[a: string], [
-  [FlagsToTest.flagA, [a: string | number, b: string]]
-]>;
+//
+//
+//
+//
 
-const funtionByFlag = <Args extends { internal: unknown[]; external: unknown[] }, Return>(fn: (...args: Args['internal']) => Return) => {
-  return (...args: Args['external']): Return => {
-    return fn(...args);
+//
+//
+//
+//
+
+type OniginalType = () => 1;
+type NewTypes = {
+  [FlagsToTest.flagA]: () => 2;
+};
+export const GiveMagicNumber = funtionByFlag<OniginalType, NewTypes>(({ calledWith, args }) => {
+  const [] = args;
+
+  return {
+    prop1: calledWith === FlagsToTest.flagA ? 2 : 1,
   };
-};
-
-export const FunctionToTest = funtionByFlag<fnArgs, string>((a, b) => {
-  const param = Shapper.validator.isFlagEnabled(FlagsToTest.flagA) ? `${a}` : a;
-  return param + '_XXX';
 });
+
+const test = GiveMagicNumber.callWith(FlagsToTest.flagA);
+const test2 = GiveMagicNumber.executeWith(FlagsToTest.flagA);

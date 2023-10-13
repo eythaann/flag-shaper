@@ -4,6 +4,7 @@
     "moduleResolution": "Node",
     "target": "ESNext",
     
+    "noImplicitOverride": true,
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "strict": true,

@@ -1,15 +1,12 @@
 import { FlagShaperForFunctions } from '../../src/modules/functions/infrastructure';
 
-import { IConfig } from '../../src/modules/shared/domain/interfaces';
-
 describe('FlagShaperForFunctions', () => {
-  let mockValidator;
-  let flagShaper;
-  const mockConfig = {} as IConfig;
+  let mockValidator: any;
+  let flagShaper: FlagShaperForFunctions<string>;
 
   beforeEach(() => {
     mockValidator = { allFlagsAreEnabled: jest.fn() };
-    flagShaper = new FlagShaperForFunctions(mockValidator, mockConfig);
+    flagShaper = new FlagShaperForFunctions(mockValidator);
   });
 
   describe('executableIn', () => {

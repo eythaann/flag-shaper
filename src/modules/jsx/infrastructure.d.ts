@@ -17,5 +17,6 @@ export declare class FlagShaperJSX<Flag extends AllowedFlags> extends BaseFlagge
   }): JSX.Element | null;
 
   UnRenderIn(props: PropsWithChildren<{ flags: Flag | Flag[] }>): JSX.Element | null;
+
   enableComponentIn<T>(flag: Flag | Flag[], component: JSXElementConstructor<T>): JSXElementConstructor<T>;
 }

@@ -1,4 +1,4 @@
-import { AnyObject, If, IsUndefined, IsUnknown, IteratorHKT, Modify, ModifyByKeyPlusOrderedCombinations, NonUndefined, Or, TupleIncludes, TupleReduceHKT } from 'readable-types';
+import { $, AnyObject, If, IsUndefined, IsUnknown, Modify, ModifyByKeyPlusOrderedCombinations, nLengthTuple, NonUndefined, Or, TupleIncludes, TupleReduce } from 'readable-types';
 
 import { CreateFlaggedInterface } from '../RootFlagger/app';
 
@@ -7,13 +7,13 @@ import { Metadata } from '../shared/domain/interfaces';
 
 export interface ConfigToConnect {
   props?: AnyObject;
-  propsOverwrites?: [[string, AnyObject], ...[string, AnyObject][]];
+  propsOverwrites?: nLengthTuple<[string, AnyObject]>;
   internalState?: AnyObject;
-  internalStateOverwrites?: [[string, AnyObject], ...[string, AnyObject][]];
+  internalStateOverwrites?: nLengthTuple<[string, AnyObject]>;
   stateProps?: AnyObject;
-  statePropsOverwrites?: [[string, AnyObject], ...[string, AnyObject][]];
+  statePropsOverwrites?: nLengthTuple<[string, AnyObject]>;
   dispatchProps?: AnyObject;
-  dispatchPropsOverwrites?: [[string, AnyObject], ...[string, AnyObject][]];
+  dispatchPropsOverwrites?: nLengthTuple<[string, AnyObject]>;
 }
 
 export interface FlaggedPropsAndState extends Metadata<ConfigToConnect> {
@@ -24,22 +24,22 @@ export interface FlaggedPropsAndState extends Metadata<ConfigToConnect> {
   completeProps: {};
 }
 
-interface testR2<KeyToFilter> extends IteratorHKT.Tuple<[string, AnyObject]> {
-  initialAcc: {};
+interface $testR2<KeyToFilter> extends $<{ current: [string, AnyObject]; acc: unknown }> {
   return: KeyToFilter extends this['current'][0]
     ? Modify<this['acc'], this['current'][1]>
     : this['acc'];
 }
 
-interface testR1 extends IteratorHKT.Tuple<[string, AnyObject], [string, AnyObject][]> {
-  initialAcc: [];
+interface $testR1 extends $<{ current: [string, AnyObject]; acc: unknown[]; tuple: nLengthTuple }> {
   return: TupleIncludes<this['acc'], [this['current'][0], AnyObject]> extends true
     ? this['acc']
-    // @ts-ignore
-    : [...this['acc'], [this['current'][0], TupleReduceHKT<this['tuple'], testR2<this['current'][0]>>]];
+    : [...this['acc'], [this['current'][0], TupleReduce<this['tuple'], $testR2<this['current'][0]>, {}>]];
 }
 
-type DefaultValue<T, Default> = If<Or<[IsUnknown<T>, IsUndefined<T>]>, Default, T>;
+type DefaultValue<T, Default> = If<Or<[IsUnknown<T>, IsUndefined<T>]>, {
+  then: Default;
+  else: T;
+}>;
 
 export type MagnifigThing<
   T extends ConfigToConnect,
@@ -54,13 +54,17 @@ export type MagnifigThing<
 
   completeProps: ModifyByKeyPlusOrderedCombinations<
   Modify<Modify<T['props'], T['stateProps']>, T['dispatchProps']>,
+  TupleReduce<
   // @ts-ignore
-  TupleReduceHKT<[
+  [
     // @ts-ignore
     ...DefaultValue<T['propsOverwrites'], []>,
     ...DefaultValue<T['statePropsOverwrites'], []>,
     ...DefaultValue<T['dispatchPropsOverwrites'], []>,
-  ], testR1>,
+  ],
+  $testR1,
+  []
+  >,
   DUnionKey
   >;
 };

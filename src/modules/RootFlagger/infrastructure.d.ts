@@ -1,4 +1,4 @@
-import { AnyFunction, AnyObject, IteratorHKT, TupleReduceHKT } from 'readable-types';
+import { $, AnyFunction, AnyObject, nLengthTuple, TupleReduce } from 'readable-types';
 
 import { FlagValidator } from '../checker/infrastructure';
 import { FlagShaperForFunctions } from '../functions/infrastructure';
@@ -48,9 +48,8 @@ export declare class FlagShaper<Flag extends AllowedFlags, _JSXEnabled, _ReduxEn
   public static Builder: typeof FlagShaper_Builder;
 }
 
-interface UnionOfValues extends IteratorHKT.Tuple<[string, unknown]> {
+interface $UnionOfValues extends $<{ acc: unknown; current: [string, unknown] }> {
   return: this['acc'] | this['current'][1];
 }
 
-// @ts-ignore
-type getValues<T extends unknown[]> = TupleReduceHKT<T, UnionOfValues, never>;
+type getValues<T extends nLengthTuple> = TupleReduce<T, $UnionOfValues, never>;

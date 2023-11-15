@@ -1,18 +1,19 @@
 import {
+  _RT,
+  $,
   AnyObject,
   Cast,
   HasProperty,
   IsStrictObject,
-  IteratorHKT,
   ModifyByKeyPlusOrderedCombinations,
   nLengthTuple,
   NonUndefined,
   Prettify,
-  TupleReduceHKT,
+  TupleReduce,
 } from 'readable-types';
 
-import { DUnionKey } from '../shared/domain/constants';
-import { Metadata, MetadataKey } from '../shared/domain/interfaces';
+import { DUnionKey, MetadataKey } from '../shared/domain/constants';
+import { Metadata } from '../shared/domain/interfaces';
 
 type __ExtractByFlags<
   T,
@@ -23,8 +24,7 @@ type __ExtractByFlags<
     : T[Key]
 };
 
-interface ReduceFlags<FlagsOnObject> extends IteratorHKT.Tuple {
-  initialAcc: [];
+interface $ReduceFlags<FlagsOnObject> extends $<{ acc: unknown; current: unknown }> {
   return: this['current'] extends FlagsOnObject ? _RT.Array.forceConcat<this['acc'], [this['current']]> : this['acc'];
 }
 
@@ -32,7 +32,7 @@ type _ExtractByFlags<
   T extends Metadata<{ types: { [DUnionKey]?: unknown[] } }>,
   Flags extends [string, ...string[]] | [],
 
-  FilteredFlags = TupleReduceHKT<Flags, ReduceFlags< NonUndefined<NonUndefined<T[MetadataKey]>['types'][DUnionKey]>[number] > >,
+  FilteredFlags = TupleReduce<Flags, $ReduceFlags< NonUndefined<NonUndefined<T[MetadataKey]>['types'][DUnionKey]>[number] >, []>,
 
 > = HasProperty<T, MetadataKey> extends false
   ? __ExtractByFlags<T, Flags>

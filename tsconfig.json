@@ -1,8 +1,6 @@
 {
   "compilerOptions": {
     "lib": ["ESNext", "DOM"],
-    "moduleResolution": "Node",
-    "target": "ESNext",
     
     "noImplicitOverride": true,
     "noImplicitReturns": true,
@@ -14,10 +12,11 @@
     "noErrorTruncation": true,
 
     "jsx": "react",
-    "allowSyntheticDefaultImports": true,
 
     "noEmit": true,
     "incremental": true,
+
+    "plugins": [{ "name": "readable-types" }]
   },
   "include": [
     "src",

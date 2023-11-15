@@ -1,11 +1,11 @@
-import { AnyObject, IsFunction, IteratorHKT, ModifyByKeyPlusOrderedCombinations, Prettify, TupleMapHKT } from 'readable-types';
+import { $, AnyObject, Cast, IsFunction, ModifyByKeyPlusOrderedCombinations, nLengthTuple, Prettify, TupleMap } from 'readable-types';
 
 import { BaseFlagger } from '../../shared/BaseFlagger/app';
 
 import { DUnionKey } from '../../shared/domain/constants';
 import { AllowedFlags } from '../../shared/domain/interfaces';
 
-interface FnToObj extends IteratorHKT.Tuple<[string, AnyObject]> {
+interface $FnToObj extends $<{ current: [string, AnyObject] }> {
   return: [
     this['current'][0],
     IsFunction<this['current'][1]> extends true
@@ -14,8 +14,7 @@ interface FnToObj extends IteratorHKT.Tuple<[string, AnyObject]> {
       : this['current'][1]
   ];
 }
-// @ts-ignore
-type OverFnToOverObj<T extends unknown[]> = TupleMapHKT<T, FnToObj>;
+type OverFnToOverObj<T extends nLengthTuple> = TupleMap<T, $FnToObj>;
 
 /* type Inferable =
   | null
@@ -30,13 +29,13 @@ type OverFnToOverObj<T extends unknown[]> = TupleMapHKT<T, FnToObj>;
 
 export declare class ObjectBuilder<
   Flag extends AllowedFlags,
-  Over extends [Flag, AnyObject][] = [],
+  Over extends nLengthTuple<[Flag, AnyObject]> = [],
   ObjToApply extends AnyObject = {}
 > extends BaseFlagger<Flag> {
   private _overrides: Over;
   private _objToApply: ObjToApply;
 
-  addCase<F extends Flag, V extends AnyObject>(flag: F, x: V): ObjectBuilder<Flag, [...Over, [F, V]], ObjToApply>;
+  addCase<F extends Flag, V extends AnyObject>(flag: F, x: V): ObjectBuilder<Flag, Cast<[...Over, [F, V]], nLengthTuple<[Flag, AnyObject]>>, ObjToApply>;
 
   get overrides(): Over;
 

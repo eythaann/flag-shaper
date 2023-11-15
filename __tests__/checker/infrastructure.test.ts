@@ -1,8 +1,8 @@
 import { FlagValidator } from '../../src/modules/checker/infrastructure';
 
 describe('FlagValidator', () => {
-  let mockIsFlagEnabled;
-  let flagValidator;
+  let mockIsFlagEnabled: jest.Mock;
+  let flagValidator: FlagValidator<string>;
 
   beforeEach(() => {
     mockIsFlagEnabled = jest.fn();

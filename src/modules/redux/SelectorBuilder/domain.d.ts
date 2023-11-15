@@ -1,27 +1,25 @@
-import { AnyObject, HasProperty, IsUnknown, IteratorHKT, KeysOfUnion, NonUndefined, TupleReduceHKT } from 'readable-types';
+import { _RT, $, AnyObject, HasProperty, IsUnknown, KeysOfUnion, nLengthTuple, NonUndefined, TupleReduce } from 'readable-types';
 
-import { Metadata, MetadataKey } from '../../shared/domain/interfaces';
+import { MetadataKey } from '../../shared/domain/constants';
+import { Metadata } from '../../shared/domain/interfaces';
 
-interface extractTypeFormPath<state> extends IteratorHKT.Tuple {
-  initialAcc: state;
+interface $ExtractTypeFormPath extends $<{ acc: unknown; current: unknown }> {
   return: _RT.ForceExtract<this['acc'], this['current']>;
 }
 
-type SelectorByFlag<State extends AnyObject, Path extends unknown[]> = (
+type SelectorByFlag<State extends AnyObject, Path extends nLengthTuple> = (
   <S extends IsUnknown<State[MetadataKey]> extends false
     ? S[MetadataKey] extends State[MetadataKey]
       ? Metadata<State[MetadataKey]>
       : Required<Metadata<State[MetadataKey]>>
     : State
-  // @ts-ignore
-  >(state: S) => TupleReduceHKT<Path, extractTypeFormPath<S>>
+  >(state: S) => TupleReduce<Path, $ExtractTypeFormPath, S>
 ) & Metadata<Path>;
 
 export type getAllPosibleKeys<
   State,
-  Fn extends Metadata<string[]>,
-  // @ts-ignore
-  R = TupleReduceHKT<NonUndefined<Fn[MetadataKey]>, extractTypeFormPath<State>>
+  Fn extends Metadata<nLengthTuple<string>>,
+  R = TupleReduce<NonUndefined<Fn[MetadataKey]>, $ExtractTypeFormPath, State>
 > = HasProperty<R, MetadataKey> extends false
   ? keyof R
   : Exclude<KeysOfUnion<_RT.ForceExtract<NonUndefined<_RT.ForceExtract<R, MetadataKey>>, 'types'>>, 'flagToUse'>;
